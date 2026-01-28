@@ -1,0 +1,198 @@
+bundle:
+  name: payer_star_ratings
+
+workspace:
+  host: https://adb-984752964297111.11.azuredatabricks.net
+  profile: DEFAULT_azure
+
+variables:
+  environment:
+    description: "Environment (dev/staging/prod)"
+    default: dev
+
+targets:
+  dev:
+    mode: development
+    variables:
+      environment: dev
+    workspace:
+      host: https://adb-984752964297111.11.azuredatabricks.net
+      profile: DEFAULT_azure
+
+resources:
+  jobs:
+    setup_star_ratings:
+      name: payer_stars_setup_${var.environment}
+      
+      job_clusters:
+        - job_cluster_key: main_cluster
+          new_cluster:
+            spark_version: "16.4.x-scala2.12"
+            node_type_id: "Standard_DS3_v2"
+            num_workers: 2
+            data_security_mode: "USER_ISOLATION"
+            custom_tags:
+              project: "payer-star-ratings"
+              environment: "${bundle.target}"
+      
+      parameters:
+        - name: environment
+          default: ${var.environment}
+      
+      tasks:
+        - task_key: cleanup
+          job_cluster_key: main_cluster
+          notebook_task:
+            notebook_path: ./setup/00_CLEANUP.py
+            base_parameters:
+              environment: ${var.environment}
+          timeout_seconds: 600
+        
+        
+        - task_key: create_catalog
+          job_cluster_key: main_cluster
+          depends_on:
+            - task_key: cleanup
+          notebook_task:
+            notebook_path: ./setup/01_create_catalog_schema.py
+            base_parameters:
+              environment: ${var.environment}
+          timeout_seconds: 900
+        
+        - task_key: generate_measures_data
+          job_cluster_key: main_cluster
+          depends_on:
+            - task_key: create_catalog
+          notebook_task:
+            notebook_path: ./setup/02_generate_measures_data.py
+            base_parameters:
+              environment: ${var.environment}
+          timeout_seconds: 1200
+        
+        - task_key: generate_member_data
+          job_cluster_key: main_cluster
+          depends_on:
+            - task_key: generate_measures_data
+          notebook_task:
+            notebook_path: ./setup/03_generate_member_data.py
+            base_parameters:
+              environment: ${var.environment}
+          timeout_seconds: 1200
+        
+        - task_key: create_uc_classify
+          job_cluster_key: main_cluster
+          depends_on:
+            - task_key: generate_member_data
+          notebook_task:
+            notebook_path: ./setup/04_uc_star_classify.py
+            base_parameters:
+              environment: ${var.environment}
+          timeout_seconds: 900
+        
+        - task_key: create_uc_analyze
+          job_cluster_key: main_cluster
+          depends_on:
+            - task_key: create_uc_classify
+          notebook_task:
+            notebook_path: ./setup/05_uc_star_analyze.py
+            base_parameters:
+              environment: ${var.environment}
+          timeout_seconds: 900
+        
+        - task_key: create_uc_recommend
+          job_cluster_key: main_cluster
+          depends_on:
+            - task_key: create_uc_analyze
+          notebook_task:
+            notebook_path: ./setup/06_uc_star_recommend.py
+            base_parameters:
+              environment: ${var.environment}
+          timeout_seconds: 900
+        
+        - task_key: create_uc_explain
+          job_cluster_key: main_cluster
+          depends_on:
+            - task_key: create_uc_recommend
+          notebook_task:
+            notebook_path: ./setup/07_uc_star_explain.py
+            base_parameters:
+              environment: ${var.environment}
+          timeout_seconds: 900
+        
+        - task_key: create_knowledge_base
+          job_cluster_key: main_cluster
+          depends_on:
+            - task_key: create_uc_explain
+          notebook_task:
+            notebook_path: ./setup/08_create_knowledge_base.py
+            base_parameters:
+              environment: ${var.environment}
+          timeout_seconds: 1200
+        
+        - task_key: chunk_knowledge_base
+          job_cluster_key: main_cluster
+          depends_on:
+            - task_key: create_knowledge_base
+          notebook_task:
+            notebook_path: ./setup/09_chunk_knowledge_base.py
+            base_parameters:
+              environment: ${var.environment}
+          timeout_seconds: 1200
+        
+        - task_key: create_vector_index
+          job_cluster_key: main_cluster
+          depends_on:
+            - task_key: chunk_knowledge_base
+          notebook_task:
+            notebook_path: ./setup/10_create_vector_index.py
+            base_parameters:
+              environment: ${var.environment}
+          timeout_seconds: 1800
+        
+        - task_key: create_analysis_table
+          job_cluster_key: main_cluster
+          depends_on:
+            - task_key: create_vector_index
+          notebook_task:
+            notebook_path: ./setup/11_create_analysis_table.py
+            base_parameters:
+              environment: ${var.environment}
+          timeout_seconds: 900
+        
+        - task_key: batch_analyze_measures
+          job_cluster_key: main_cluster
+          depends_on:
+            - task_key: create_analysis_table
+          notebook_task:
+            notebook_path: ./setup/12_batch_analyze_measures.py
+            base_parameters:
+              environment: ${var.environment}
+          timeout_seconds: 1800
+        
+        - task_key: create_predictions
+          job_cluster_key: main_cluster
+          depends_on:
+            - task_key: batch_analyze_measures
+          notebook_task:
+            notebook_path: ./setup/13_create_predictions.py
+            base_parameters:
+              environment: ${var.environment}
+          timeout_seconds: 900
+        
+        - task_key: create_genie_space
+          job_cluster_key: main_cluster
+          depends_on:
+            - task_key: create_predictions
+          notebook_task:
+            notebook_path: ./setup/14_create_genie_space.py
+            base_parameters:
+              environment: ${var.environment}
+          timeout_seconds: 900
+  
+  
+  # Databricks App - Streamlit Dashboard
+  apps:
+    payer_stars_app:
+      name: payerstars-${var.environment}
+      description: "AI-Powered Payer Star Ratings - ${var.environment}"
+      source_code_path: ./app

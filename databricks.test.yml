@@ -1,0 +1,33 @@
+bundle:
+  name: payer_star_ratings_test
+
+workspace:
+  host: https://adb-984752964297111.11.azuredatabricks.net
+  profile: DEFAULT_azure
+
+variables:
+  environment:
+    description: "Environment (dev/staging/prod)"
+    default: dev
+
+targets:
+  dev:
+    mode: development
+    variables:
+      environment: dev
+
+resources:
+  jobs:
+    test_serverless_connection:
+      name: test_serverless_connection_${var.environment}
+      
+      # NO job_clusters - will use serverless compute automatically
+      
+      tasks:
+        - task_key: test_connection
+          # When no cluster is specified, Databricks uses serverless
+          notebook_task:
+            notebook_path: ./setup/00_test_connection.py
+            base_parameters:
+              environment: ${var.environment}
+          timeout_seconds: 600

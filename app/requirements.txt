@@ -1,0 +1,19 @@
+# App requirements
+databricks-sdk>=0.27.0
+databricks-sql-connector>=3.0.0
+databricks-vectorsearch>=0.22
+
+# LangGraph & LangChain
+langgraph>=0.2.0
+langchain>=0.3.0
+langchain-core>=0.3.0
+langchain-databricks>=0.1.0
+
+# Streamlit
+streamlit>=1.31.0
+plotly>=5.18.0
+pandas>=2.0.0
+
+# Utilities
+pyyaml>=6.0
+pydantic>=2.5.0

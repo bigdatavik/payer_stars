@@ -1,0 +1,39 @@
+.databricks/
+__pycache__/
+*.pyc
+.DS_Store
+.vscode/
+*.log
+
+# Frontend templates (user request)
+.fraudtemplate
+
+# Environment & Secrets
+.env
+*.pem
+*.key
+credentials.json
+
+# Python Virtual Environments
+venv/
+env/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Databricks specific
+*.dbx
+
+# IDEs
+.idea/
+
+# Temporary files
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/

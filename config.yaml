@@ -1,0 +1,59 @@
+# Payer Star Ratings - Deployment Configuration
+# ✅ THIS IS THE ONLY FILE YOU NEED TO EDIT
+# Change values here - notebooks and app automatically read from this file
+
+# Default environment (used when no STARS_ENV variable set)
+default_environment: dev
+
+environments:
+  # All environments in same workspace, separated by catalog names
+  dev:
+    workspace_host: "https://adb-984752964297111.11.azuredatabricks.net"
+    profile: "DEFAULT_azure"
+    catalog: "payer_stars_dev"
+    schema: "star_ratings"  # Correct - matches actual deployed schema
+    warehouse_id: "148ccb90800933a1"
+    vector_endpoint: "one-env-shared-endpoint-2"
+    llm_endpoint: "databricks-claude-sonnet-4-5"
+    app_name: "payerstars-dev" # Matches databricks.yml (hyphens, not underscores!)
+    genie_space_id: "" # Get from config_genie table or Genie UI after setup
+
+  staging:
+    workspace_host: "https://adb-984752964297111.11.azuredatabricks.net" # Same workspace as dev
+    profile: "DEFAULT_azure" # Same profile
+    catalog: "payer_stars_staging" # Different catalog for separation
+    schema: "star_ratings"
+    warehouse_id: "148ccb90800933a1" # Can use same warehouse
+    vector_endpoint: "one-env-shared-endpoint-2"
+    llm_endpoint: "databricks-claude-sonnet-4-5"
+    app_name: "payerstars-staging" # Hyphens, not underscores!
+    genie_space_id: "" # REQUIRED: Get this from setup/14_create_genie_space.py output
+
+  prod:
+    workspace_host: "https://fe-vm-industry-solutions-buildathon.cloud.databricks.com"
+    profile: "DEFAULT_fevm" # Different profile for prod
+    catalog: "payer_stars_prod" # Different catalog for separation
+    schema: "star_ratings"
+    warehouse_id: "159828d8fa91cd28" # Different warehouse for prod
+    vector_endpoint: "one-env-shared-endpoint-2"
+    llm_endpoint: "databricks-claude-sonnet-4-5"
+    app_name: "payerstars-prod" # Hyphens, not underscores!
+    genie_space_id: "" # REQUIRED: Get this from setup/14_create_genie_space.py output
+
+# Common configuration (shared across all environments)
+common:
+  spark_version: "16.4.x-scala2.12"
+  node_type: "Standard_DS3_v2"
+  num_workers: 2
+
+  # Data generation settings
+  num_measures: 45 # Number of HEDIS measures to generate
+  gap_rate: 0.50 # 50% of measures have performance gaps
+
+  # Genie Space settings (used by API creation)
+  genie_space_display_name: "Star Ratings Analytics"
+  genie_space_description: "Query payer star ratings data and trends with natural language"
+
+  # Vector search settings
+  embedding_model: "databricks-gte-large-en"
+  sync_type: "TRIGGERED"

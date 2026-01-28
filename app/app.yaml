@@ -1,0 +1,38 @@
+# ✅ CORRECT - Official Microsoft Pattern
+# 🤖 AUTO-GENERATED from config.yaml - DO NOT EDIT DIRECTLY!
+# Run: python generate_app_yaml.py dev
+
+command: ['streamlit', 'run', 'app.py']
+
+env:
+  # Core Databricks connection
+  - name: 'DATABRICKS_HOST'
+    value: 'adb-984752964297111.11.azuredatabricks.net'
+  - name: 'DATABRICKS_WAREHOUSE_ID'
+    value: '148ccb90800933a1'
+  
+  # Unity Catalog configuration
+  - name: 'CATALOG_NAME'
+    value: 'payer_stars_dev'
+  - name: 'SCHEMA_NAME'
+    value: 'star_ratings'
+  
+  # Vector Search configuration
+  - name: 'VECTOR_ENDPOINT'
+    value: 'one-env-shared-endpoint-2'
+  
+  # LLM configuration
+  - name: 'LLM_ENDPOINT'
+    value: 'databricks-claude-sonnet-4-5'
+  
+  # Genie Space ID (for Performance Dashboard page)
+  - name: 'GENIE_SPACE_ID'
+    value: ''
+  
+  # Environment identifier
+  - name: 'ENVIRONMENT'
+    value: 'dev'
+  
+  # Embedding model for vector search
+  - name: 'EMBEDDING_MODEL'
+    value: 'databricks-gte-large-en'
