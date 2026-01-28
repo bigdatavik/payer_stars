@@ -40,3 +40,6 @@ htmlcov/
 
 # LinkedIn docs (user request)
 linkedin/docs/
+
+# Environment documentation (user request)
+MY_ENVIRONMENT.md
