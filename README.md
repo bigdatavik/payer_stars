@@ -6,18 +6,19 @@
 > This project should NOT be used in production without proper testing, compliance review, and legal approval.  
 > No warranties expressed or implied. Use at your own risk.
 
-> **Project Status**: ✅ **Complete & Ready for Deployment** | January 2026
+> **Project Status**: ✅ **Complete & Deployed** | January 2026
 
 [![Databricks](https://img.shields.io/badge/Databricks-Ready-red?logo=databricks)](https://databricks.com)
 [![LangGraph](https://img.shields.io/badge/LangGraph-StateGraph-blue)](https://langchain-ai.github.io/langgraph/)
 [![Unity Catalog](https://img.shields.io/badge/Unity%20Catalog-AI%20Functions-orange)](https://www.databricks.com/product/unity-catalog)
 [![Status](https://img.shields.io/badge/Status-Production--Ready-success)](#)
+[![GitHub](https://img.shields.io/badge/GitHub-payer__stars-black?logo=github)](https://github.com/bigdatavik/payer_stars)
 
 An intelligent **Medicare Advantage Star Ratings** analysis and improvement system for healthcare payers (like Humana), focused on seniors (65+) with chronic conditions. Uses LangGraph StateGraph agents, Unity Catalog AI functions, Vector Search, and Medicare-focused HEDIS guidelines.
 
 **Target Users:** Medicare Advantage payers, quality teams managing Part D adherence, readmissions, chronic disease management, and member experience.
 
-**Key Features:** CMS 2026 weighted scoring (3x outcomes, 2x experience, 1x preventive) | Medicare-specific measures | Part D medication adherence focus | Readmissions & transitions | Star Ratings calculator with what-if scenarios
+**Key Features:** CMS 2026 weighted scoring (3x outcomes, 2x experience, 1x preventive) | Medicare-specific measures | Part D medication adherence focus | Readmissions & transitions | Star Ratings calculator with what-if scenarios | **Clean Gap Analysis UI with tabs**
 
 **Medicare Focus:** 
 - 🎯 **Part D Medication Adherence** (3x weight): Critical for diabetes, hypertension, cholesterol meds
@@ -25,6 +26,14 @@ An intelligent **Medicare Advantage Star Ratings** analysis and improvement syst
 - 👴 **Geriatric Population** (65+): Avg age 73, 80%+ have 2+ chronic conditions
 - 💊 **High-Risk Medications** (3x weight): Beers Criteria monitoring for elderly
 - 💰 **Quality Bonus Impact**: 5-star plans receive enhanced CMS rebate payments
+
+**Recent Updates (January 2026):**
+- ✅ Improved Gap Analysis UI with tab-based formatting
+- ✅ Wide layout for better screen utilization
+- ✅ Quick question buttons auto-populate text inputs
+- ✅ Vector Search using SQL function for reliable authentication
+- ✅ Genie integration with full Conversation API
+- ✅ GitHub repository with proper .gitignore
 
 ---
 
@@ -462,8 +471,17 @@ Key Dependencies:
 ### **Streamlit Dashboard**
 - 🏠 **Home** - Medicare Advantage overview, CMS 2026 methodology, Humana context
 - 📊 **Measure Analysis** - Interactive agent with StateGraph workflow
+  - ✨ **Wide layout** for better screen utilization
+  - ✨ **Tab-based Gap Analysis** with 4 categories (Root Causes, Affected Populations, Performance Barriers, Data Quality Issues)
+  - ✨ **12 Quick Question buttons** that auto-populate text input
+  - ✨ Clean, formatted output with no redundancy
+  - ✨ Vector Search results displayed with guideline documents
 - 💡 **Improvement Planner** - Gap analysis and recommendations
 - 📈 **Performance Dashboard** - Trends with Genie integration
+  - ✨ **Natural language queries** with Databricks Genie Conversation API
+  - ✨ **8 Quick Question buttons** for common Medicare queries
+  - ✨ Auto-populated text input on button click
+  - ✨ Full results display: text response, SQL, data tables, and auto-generated charts
 - 🌟 **Star Ratings Calculator** - Weighted scoring, cut points, what-if scenarios
 
 ---
@@ -1153,6 +1171,39 @@ Status: EXCELLENT - System fully operational
 - **Explainable AI** with HEDIS guideline citations
 - **Role-based access** control via Unity Catalog
 - **CMS-ready** architecture for star ratings reporting
+
+---
+
+## 🛠️ Technical Highlights & Recent Improvements
+
+### **UI/UX Enhancements**
+- ✅ **Wide Layout**: Streamlit pages use full browser width for better space utilization
+- ✅ **Tab-Based Gap Analysis**: Clean, organized display of root causes, affected populations, performance barriers, and data quality issues
+- ✅ **Auto-Populate Text Inputs**: Quick question buttons automatically populate search fields (no manual copy-paste)
+- ✅ **Clean Output Formatting**: Eliminated redundant displays, showing only relevant formatted sections
+
+### **Vector Search Implementation**
+- ✅ **SQL-Based Approach**: Uses `VECTOR_SEARCH` SQL function instead of SDK for reliable authentication in Databricks Apps
+- ✅ **Service Principal Auth**: Seamless authentication via SQL connection in app environment
+- ✅ **Guideline Retrieval**: Returns relevant HEDIS documents with doc ID, title, and content
+
+### **Genie Integration**
+- ✅ **Full Conversation API**: Implements complete Genie conversation pattern (start → poll → results)
+- ✅ **Rich Results Display**: Text responses, generated SQL, data tables, and auto-generated Plotly charts
+- ✅ **Medicare-Specific Questions**: 8 pre-built queries for common Medicare Advantage analytics
+- ✅ **Database-First Configuration**: Auto-discovers Genie Space ID from config table
+
+### **Deployment & Version Control**
+- ✅ **GitHub Repository**: Full source code at https://github.com/bigdatavik/payer_stars
+- ✅ **Comprehensive .gitignore**: Excludes sensitive files (.env, credentials), build artifacts, and Databricks state
+- ✅ **One-Command Deployment**: Automated end-to-end setup with pre-flight checks
+- ✅ **Service Principal Permissions**: Automated permission grants for catalog, schema, and warehouse
+
+### **Error Handling & Robustness**
+- ✅ **Array Boolean Fix**: Eliminated "truth value of array" errors in Python with explicit length checks
+- ✅ **JSON Parsing**: Robust handling of UC function return values (STRUCT → dict → display)
+- ✅ **Session State Management**: Proper Streamlit state handling for interactive widgets
+- ✅ **Graceful Degradation**: Fallback displays when data unavailable
 
 ---
 
