@@ -37,3 +37,6 @@ build/
 .pytest_cache/
 .coverage
 htmlcov/
+
+# LinkedIn docs (user request)
+linkedin/docs/
