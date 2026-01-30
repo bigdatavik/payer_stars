@@ -28,12 +28,16 @@ An intelligent **Medicare Advantage Star Ratings** analysis and improvement syst
 - 💰 **Quality Bonus Impact**: 5-star plans receive enhanced CMS rebate payments
 
 **Recent Updates (January 2026):**
+- ✅ **Architecture Page**: Complete platform visualization with data flow diagrams
+- ✅ **Setup Resources Page**: Quick links to notebooks and jobs (configurable URLs)
+- ✅ **Configuration Enhancement**: URLs moved to config.yaml (environment-specific)
 - ✅ Improved Gap Analysis UI with tab-based formatting
 - ✅ Wide layout for better screen utilization
 - ✅ Quick question buttons auto-populate text inputs
 - ✅ Vector Search using SQL function for reliable authentication
 - ✅ Genie integration with full Conversation API
 - ✅ GitHub repository with proper .gitignore
+- ✅ Comprehensive documentation in `docs/` folder
 
 ---
 
@@ -86,6 +90,14 @@ environments:
 - **Warehouse ID**: Databricks → SQL Warehouses → Copy the ID
 - **Vector Endpoint**: Databricks → Compute → Vector Search → Your endpoint name
 - **LLM Endpoint**: Databricks → Serving → Foundation Models → Your endpoint
+
+**Optional: Setup Resources URLs** (added after initial deployment):
+```yaml
+# After deployment, update these URLs for quick links in the app
+notebooks_folder_url: "https://your-workspace.net/browse/folders/123456?o=123456"
+setup_job_url: "https://your-workspace.net/jobs/789012?o=123456"
+```
+See `docs/SETUP_RESOURCES_CONFIG.md` for detailed instructions on finding these URLs.
 
 ---
 
@@ -470,6 +482,7 @@ Key Dependencies:
 
 ### **Streamlit Dashboard**
 - 🏠 **Home** - Medicare Advantage overview, CMS 2026 methodology, Humana context
+- 🏗️ **Architecture** - Platform visualization, data flow diagrams, technology stack details
 - 📊 **Measure Analysis** - Interactive agent with StateGraph workflow
   - ✨ **Wide layout** for better screen utilization
   - ✨ **Tab-based Gap Analysis** with 4 categories (Root Causes, Affected Populations, Performance Barriers, Data Quality Issues)
@@ -483,6 +496,7 @@ Key Dependencies:
   - ✨ Auto-populated text input on button click
   - ✨ Full results display: text response, SQL, data tables, and auto-generated charts
 - 🌟 **Star Ratings Calculator** - Weighted scoring, cut points, what-if scenarios
+- 🔧 **Setup Resources** - Quick links to notebooks and jobs (environment-specific URLs)
 
 ---
 
@@ -1001,6 +1015,47 @@ databricks bundle run validate_star_ratings --target dev --profile DEFAULT_azure
 
 ---
 
+## 📚 Documentation
+
+This project includes comprehensive documentation in the `docs/` folder:
+
+### **Setup Resources Configuration**
+- **`docs/SETUP_RESOURCES_CONFIG.md`** - Complete guide for configuring notebooks and job URLs
+  - How to find URLs in Databricks workspace
+  - Step-by-step configuration instructions
+  - Troubleshooting tips
+  - Example configurations
+
+- **`docs/QUICK_REF_SETUP_RESOURCES.md`** - Quick reference card
+  - One-page summary
+  - Common commands
+  - Where to find values
+
+- **`docs/CHANGES_SETUP_RESOURCES.md`** - Technical change log
+  - Detailed implementation notes
+  - Files modified
+  - Architecture flow
+  - Testing notes
+
+- **`docs/SUMMARY_SETUP_RESOURCES.md`** - Visual implementation summary
+  - Before/after comparison
+  - Architecture diagrams
+  - Benefits and features
+
+### **In-App Documentation**
+- **Architecture Page** (`app/pages/0_architecture.py`) - Interactive platform documentation
+- **Setup Resources Page** (`app/pages/5_setup_resources.py`) - Quick access to deployment resources
+
+### **Main Documentation**
+- **README.md** - This file - complete project documentation
+  - Quick start guide
+  - Feature overview
+  - Deployment instructions
+  - Troubleshooting
+  - Architecture diagrams
+
+---
+
 ## 📁 Project Structure
 
 ```
@@ -1018,8 +1073,15 @@ payer_stars/
 │   ├── __init__.py
 │   └── config.py                # Config loader for notebooks
 │
+├── docs/                        # 📚 Documentation
+│   ├── SETUP_RESOURCES_CONFIG.md    # Setup Resources URL guide
+│   ├── CHANGES_SETUP_RESOURCES.md   # Technical change log
+│   ├── SUMMARY_SETUP_RESOURCES.md   # Implementation summary
+│   └── QUICK_REF_SETUP_RESOURCES.md # Quick reference
+│
 ├── setup/                       # Setup notebooks (run by DAB)
 │   ├── 00_CLEANUP.py           # ⭐ Cleanup script (new!)
+│   ├── 00_test_connection.py   # Connection test (standalone)
 │   ├── 01_create_catalog_schema.py
 │   ├── 02_generate_measures_data.py
 │   ├── 03_generate_member_data.py
@@ -1040,12 +1102,18 @@ payer_stars/
     ├── app.yaml                 # Auto-generated (don't edit)
     ├── app.py                   # Main app
     ├── requirements.txt         # Dependencies
+    ├── assets/                  # Images and diagrams
+    │   ├── databricks_platform.png
+    │   └── job_timeline.png
     ├── utils/
     │   └── star_agent.py        # StateGraph agent implementation
     └── pages/                   # Streamlit pages
+        ├── 0_architecture.py        # Architecture visualization (NEW)
         ├── 1_measure_analysis.py
-        ├── 2_improvement_planner.py
-        └── 3_analytics_dashboard.py
+        ├── 2_performance_dashboard.py
+        ├── 3_improvement_planner.py
+        ├── 4_star_ratings_calculator.py
+        └── 5_setup_resources.py    # Setup resources links (NEW)
 ```
 
 ---
@@ -1073,10 +1141,16 @@ The system supports dev, staging, and prod environments:
 environments:
   dev:
     catalog: "payer_stars_dev"
+    notebooks_folder_url: "https://..."  # Optional
+    setup_job_url: "https://..."          # Optional
   staging:
     catalog: "payer_stars_staging"
+    notebooks_folder_url: ""  # Update after staging deployment
+    setup_job_url: ""         # Update after staging deployment
   prod:
     catalog: "payer_stars_prod"
+    notebooks_folder_url: ""  # Update after prod deployment
+    setup_job_url: ""         # Update after prod deployment
 ```
 
 Deploy to different environments:
@@ -1091,6 +1165,8 @@ Deploy to different environments:
 # Prod
 ./deploy_with_config.sh prod
 ```
+
+**Setup Resources URLs**: After deploying to each environment, you can optionally update the `notebooks_folder_url` and `setup_job_url` in `config.yaml` to enable quick links in the Setup Resources page. See `docs/SETUP_RESOURCES_CONFIG.md` for instructions.
 
 ---
 
@@ -1192,6 +1268,24 @@ Status: EXCELLENT - System fully operational
 - ✅ **Rich Results Display**: Text responses, generated SQL, data tables, and auto-generated Plotly charts
 - ✅ **Medicare-Specific Questions**: 8 pre-built queries for common Medicare Advantage analytics
 - ✅ **Database-First Configuration**: Auto-discovers Genie Space ID from config table
+
+### **Genie Integration**
+- ✅ **Full Conversation API**: Implements complete Genie conversation pattern (start → poll → results)
+- ✅ **Rich Results Display**: Text responses, generated SQL, data tables, and auto-generated Plotly charts
+- ✅ **Medicare-Specific Questions**: 8 pre-built queries for common Medicare Advantage analytics
+- ✅ **Database-First Configuration**: Auto-discovers Genie Space ID from config table
+
+### **Setup Resources Page**
+- ✅ **Quick Links**: Direct navigation to setup notebooks and jobs in Databricks workspace
+- ✅ **Environment-Specific URLs**: Configured in `config.yaml` per environment
+- ✅ **Graceful Degradation**: Shows helpful messages if URLs not yet configured
+- ✅ **15 Setup Notebooks**: Complete list with descriptions
+
+### **Architecture Visualization**
+- ✅ **Platform Diagram**: Complete technology stack overview
+- ✅ **Data Flow**: 15-task pipeline visualization
+- ✅ **Runtime Architecture**: End-to-end data flow with timing
+- ✅ **Technical Deep Dives**: UC Functions, Vector Search, Genie integration details
 
 ### **Deployment & Version Control**
 - ✅ **GitHub Repository**: Full source code at https://github.com/bigdatavik/payer_stars

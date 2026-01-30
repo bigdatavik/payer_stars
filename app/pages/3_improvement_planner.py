@@ -5,6 +5,8 @@ Improvement Planner - Get AI-Powered Recommendations
 import streamlit as st
 import os
 
+st.set_page_config(layout="wide")
+
 st.title("💡 Improvement Planner")
 
 st.markdown("""

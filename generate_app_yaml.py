@@ -79,6 +79,12 @@ env:
   - name: 'GENIE_SPACE_ID'
     value: '{env_config.get('genie_space_id', '')}'
   
+  # Setup Resources URLs (for Setup Resources page)
+  - name: 'NOTEBOOKS_FOLDER_URL'
+    value: '{env_config.get('notebooks_folder_url', '')}'
+  - name: 'SETUP_JOB_URL'
+    value: '{env_config.get('setup_job_url', '')}'
+  
   # Environment identifier
   - name: 'ENVIRONMENT'
     value: '{environment}'

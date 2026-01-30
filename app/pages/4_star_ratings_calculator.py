@@ -7,6 +7,8 @@ import streamlit as st
 import pandas as pd
 import os
 
+st.set_page_config(layout="wide")
+
 st.title("🌟 Star Ratings Calculator")
 
 st.markdown("""
@@ -42,6 +44,76 @@ with col2:
     - 🎯 **Outcomes Measures**: 3x weight
     - 👥 **Experience/Access**: 2x weight
     - 🛡️ **Preventive Care**: 1x weight
+    """)
+
+# Methodology Explainer
+with st.expander("📖 How Are Star Ratings Calculated? (Click to Learn)", expanded=False):
+    st.markdown("""
+    ### CMS Star Ratings Calculation Methodology
+    
+    The overall star rating is calculated using a **weighted average** of all individual measure performances.
+    
+    #### Step-by-Step Process:
+    
+    **1️⃣ Each Measure Gets a Star Rating (1-5)**
+    
+    Individual HEDIS measures receive stars based on performance thresholds set by CMS.
+    
+    **2️⃣ Apply Category Weights**
+    
+    CMS assigns different weights to emphasize clinical outcomes:
+    - **Outcomes/Part D measures**: 3x weight (highest priority)
+    - **Experience/Access measures**: 2x weight (medium priority)
+    - **Preventive measures**: 1x weight (baseline)
+    
+    **3️⃣ Calculate Weighted Average**
+    
+    ```
+    Overall Rating = Σ(Measure Stars × Weight) / Σ(Total Weights)
+    ```
+    
+    **4️⃣ Convert to Star Tier**
+    
+    The decimal rating is mapped to a tier (1-5 stars) using CMS cut points.
+    
+    ---
+    
+    ### 📝 Example Calculation:
+    
+    Let's say you have 3 measures:
+    
+    | Measure | Stars | Weight | Weighted Score |
+    |---------|-------|--------|----------------|
+    | Diabetes Control (Outcome) | 3.5 | 3x | 3.5 × 3 = **10.5** |
+    | Member Experience | 4.0 | 2x | 4.0 × 2 = **8.0** |
+    | Flu Vaccination (Preventive) | 4.5 | 1x | 4.5 × 1 = **4.5** |
+    
+    **Calculation:**
+    ```
+    Total Weighted Score = 10.5 + 8.0 + 4.5 = 23.0
+    Total Weight = 3 + 2 + 1 = 6
+    Overall Rating = 23.0 ÷ 6 = 3.83 ⭐⭐⭐⭐ (4 Stars)
+    ```
+    
+    ---
+    
+    ### 💡 Why Weights Matter:
+    
+    **Impact of 0.5 Star Improvement:**
+    - Improving a **3x weighted** measure by 0.5 stars → **+0.5 × 3 = +1.5** to weighted score
+    - Improving a **1x weighted** measure by 0.5 stars → **+0.5 × 1 = +0.5** to weighted score
+    
+    **Bottom Line:** Focusing on high-weight measures (Outcomes, Part D) provides **3x more impact** on your overall rating!
+    
+    ---
+    
+    ### 💰 Financial Impact:
+    
+    - **5 Stars (≥4.25)**: Enhanced Quality Bonus Payments + Member growth
+    - **4 Stars (3.75-4.24)**: Quality Bonus Payments
+    - **3 Stars or below**: No bonus payments, risk of losing members
+    
+    Even a **0.1 point improvement** near the 4.25 threshold can mean **millions in bonus revenue**!
     """)
 
 st.markdown("---")
