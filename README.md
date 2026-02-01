@@ -182,7 +182,7 @@ When you run the commands above, the system automatically:
 1. ✅ **Cleanup** - Removes all existing resources (catalog, tables, indexes, functions) for clean run
 2. ✅ Creates Unity Catalog `payer_stars_dev`
 3. ✅ Creates schema `star_ratings`
-4. ✅ Generates synthetic **Medicare-focused** HEDIS measures data (42 measures, removed pediatric)
+4. ✅ Generates synthetic **Medicare-focused** HEDIS measures data (41 HEDIS measures)
 5. ✅ **CMS 2026 Weights**: Outcomes 3x, Experience/Access 2x, Preventive 1x
 6. ✅ Generates synthetic member enrollment data (50,000 Medicare Advantage members, avg age 73)
 7. ✅ Creates **4 UC AI functions** (classify, analyze, recommend, explain)
@@ -392,7 +392,7 @@ The setup job runs 15 tasks with dependencies. Here's the execution flow:
         ┌───────────▼────────┐    ┌───▼──────────┐  ┌───▼──────────┐
         │ 3. Generate        │    │ 4. Generate  │  │ UC Functions │
         │    Measures        │    │    Members   │  │ (Tasks 5-8)  │
-        │ • 45 HEDIS         │    │ • 50K MA     │  │              │
+        │ • 41 HEDIS         │    │ • 50K MA     │  │              │
         │   measures         │    │   members    │  │ 5. classify  │
         └───────────┬────────┘    └───┬──────────┘  │ 6. analyze   │
                     │                 │             │ 7. recommend │
@@ -554,7 +554,7 @@ Step 1: Data Sources
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    HEDIS Measures                        Member Enrollments
    (Performance Data)                    (Demographics)
-         ├─ 45 measures                       ├─ 50,000 members
+         ├─ 41 measures                       ├─ 50,000 members
          ├─ All domains                       ├─ Age, risk scores
          ├─ Performance rates                 └─ Plan types
          └─ Target benchmarks                      │
@@ -666,7 +666,7 @@ You should see:
 - **Catalog**: `payer_stars_dev`
 - **Schema**: `star_ratings`
 - **Tables**: 
-  - `measures_data` (45 rows)
+  - `measures_data` (41 rows)
   - `member_enrollments` (50,000 rows)
   - `hedis_docs_staging` (5 rows)
   - `hedis_guidelines_kb` (~25 chunks)

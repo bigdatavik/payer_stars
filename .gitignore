@@ -38,8 +38,8 @@ build/
 .coverage
 htmlcov/
 
-# LinkedIn docs (user request)
-linkedin/docs/
+# LinkedIn folder (user request - contains screenshots and docs)
+linkedin/
 
 # Environment documentation (user request)
 MY_ENVIRONMENT.md

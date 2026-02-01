@@ -124,16 +124,16 @@ if st.button("🧠 Analyze with StateGraph Agent", type="primary"):
                 
                 st.success("✅ Analysis complete!")
                 
-                # Debug: Show what we got back
-                st.sidebar.markdown("**Debug Info:**")
-                st.sidebar.json({
-                    "query_type": result.get('query_type'),
-                    "has_classification": bool(result.get('classification')),
-                    "has_gaps": bool(result.get('gaps')),
-                    "has_recommendations": bool(result.get('recommendations')),
-                    "has_knowledge": bool(result.get('knowledge')),
-                    "knowledge_count": len(result.get('knowledge', [])) if result.get('knowledge') else 0
-                })
+                # Debug: Show what we got back (COMMENTED OUT FOR PRODUCTION)
+                # st.sidebar.markdown("**Debug Info:**")
+                # st.sidebar.json({
+                #     "query_type": result.get('query_type'),
+                #     "has_classification": bool(result.get('classification')),
+                #     "has_gaps": bool(result.get('gaps')),
+                #     "has_recommendations": bool(result.get('recommendations')),
+                #     "has_knowledge": bool(result.get('knowledge')),
+                #     "knowledge_count": len(result.get('knowledge', [])) if result.get('knowledge') else 0
+                # })
                 
                 # Display results
                 st.markdown("---")
