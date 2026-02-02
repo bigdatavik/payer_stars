@@ -41,5 +41,8 @@ htmlcov/
 # LinkedIn folder (user request - contains screenshots and docs)
 linkedin/
 
+# Dashboards folder (contains sample/reference dashboards)
+dashboards/
+
 # Environment documentation (user request)
 MY_ENVIRONMENT.md
