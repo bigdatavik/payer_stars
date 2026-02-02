@@ -7,17 +7,17 @@
 
 **Databricks is the only platform that unifies data, analytics, and AI with generative intelligence built in:**
 
-1. **Data Intelligence (Not Just Storage)** - AI understands your organization's unique data semantics, business logic, and relationships. The Data Intelligence Engine automatically optimizes queries, suggests joins, and answers questions in plain English by learning from your SQL patterns, dashboards, and business metrics.
+1. **One platform for all data and AI** - Run ETL, streaming, warehousing, BI, ML, and GenAI on a single lakehouse platform instead of stitching together multiple point solutions. For payers: claims ingestion, quality analytics, star ratings modeling, and AI-powered gap closure all run on the same unified foundation—cutting cost and complexity.
 
-2. **Lakehouse Architecture (Eliminate Silos)** - Unifies data warehouse capabilities (SQL, BI, governance) + data lake scale (all data types, ML, streaming) on open formats (Delta Lake, Iceberg). Claims, clinical notes, member records, and pharmacy data exist once - no ETL between systems, no duplicate pipelines, no stale copies.
+2. **Built-in governance and trust (Unity Catalog)** - Centralized access control, lineage, auditing, and automated data classification across all data, models, and notebooks so teams can move fast without losing control or compliance. HIPAA compliant with BAA. Quality, actuarial, and care management see the same source of truth with row/column-level permissions for PHI protection.
 
-3. **Unity Catalog (End-to-End Governance)** - Single control plane for ALL assets: data tables, ML models, notebooks, dashboards, and AI functions. Fine-grained access control (row/column level), automated lineage, HIPAA compliance with BAA, PHI protection. Quality, actuarial, and care management teams see the same source of truth with appropriate permissions.
+3. **AI that understands your data (Data Intelligence Engine)** - An engine that learns the semantics of your enterprise data to auto-optimize performance, improve search and discovery, and power natural-language experiences like Genie and AI/BI. Business users ask "show me gaps over 10%" and AI writes the SQL—no training needed.
 
-4. **Built-In Production AI (No External APIs)** - Claude Sonnet 4.5, Llama, and Mistral run inside your cloud environment. AI Functions callable from SQL (no Python required). Genie natural language interface lets business users ask "show me gaps over 10%" and AI writes the SQL. Vector Search enables RAG over 10,000+ pages of HEDIS guidelines.
+4. **Self-service analytics for every persona** - Business users can explore governed data, build AI/BI dashboards, and ask questions in plain English—without new BI licenses or constantly relying on data engineers. Quality analysts export member lists in 2 minutes vs 2-3 days waiting for IT. Care managers self-service gap closure campaigns with one-click CSV downloads.
 
-5. **Real-Time Empowerment (No IT Bottlenecks)** - Quality analysts and care managers self-service on live data without waiting for overnight batch jobs or IT tickets. Export member lists in 2 minutes vs 2-3 days. Model star rating scenarios in 15 minutes vs 3 days in Excel.
+5. **Open, future-proof architecture** - Leverage open formats (Delta Lake, Iceberg), open APIs, and multi-cloud support (Azure, AWS, GCP) so you avoid vendor lock-in, can share data securely with partners, and plug in any current or future AI model. Works with existing tools: Tableau, Power BI, Epic, Cerner, claims systems.
 
-6. **Proven in Healthcare** - 40% of Fortune 500 healthcare companies use Databricks for star ratings, risk adjustment (HCC), quality gap closure, population health, prior authorization, and fraud detection. #1 in 2025 Gartner Magic Quadrant for Data Science and ML Platforms.
+6. **Proven performance and ROI at scale** - Customers routinely consolidate tools, improve time-to-insight, and reduce TCO by simplifying their stack on Databricks—while unlocking new revenue use cases. In healthcare: 40% of Fortune 500 use Databricks for star ratings, risk adjustment (HCC), quality gap closure, population health, and fraud detection. #1 in 2025 Gartner Magic Quadrant for Data Science and ML Platforms.
 
 ---
 
