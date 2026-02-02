@@ -3,16 +3,35 @@
 
 ---
 
-## What is Databricks? (5 lines)
+## What is Databricks?
 
-**Databricks is a unified data and AI platform that eliminates data silos:**
-- Combines all your data (claims, clinical, member) in one place - no copying data to separate analytics systems
-- Built-in production AI (Claude, Llama, Mistral) - no external APIs, your data never leaves your environment  
-- Business users ask questions in plain English - quality analysts don't need SQL or IT tickets
-- Real-time analytics on live data - no waiting for overnight batch jobs or data warehouse loads
-- Runs in your Azure/AWS cloud - HIPAA compliant, you control security and governance
+**Databricks is a unified data and AI platform built on three core innovations:**
 
-**In healthcare:** Major payers use Databricks for star ratings, risk adjustment, quality gap closure, and population health.
+### 1. Data Lakehouse Architecture
+- Combines best of data warehouses (SQL analytics, BI) + data lakes (scalable storage, ML) in one platform
+- Eliminate ETL between systems - query all data types (structured claims, unstructured clinical notes, streaming) in one place
+- Delta Lake provides ACID transactions and time travel on cloud object storage (S3, Azure Blob)
+- No data silos: claims, clinical, member, pharmacy, and reference data unified under single governance layer
+
+### 2. Unity Catalog (Unified Governance)
+- Single place to manage all data, AI models, and notebooks across your entire organization
+- Fine-grained access control: row/column-level security, automatic audit logging, data lineage tracking
+- Share data securely across teams without copying: quality, actuarial, care management see same source of truth
+- HIPAA compliant with BAA: encryption at rest/in transit, automated compliance reporting, PHI protection
+
+### 3. Built-In Production AI
+- Foundation models (Claude, Llama, Mistral) run inside your environment - no external APIs, no data leaving your cloud
+- AI Functions in Unity Catalog: classify, analyze, summarize data with one SQL line - no Python/ML expertise required
+- Vector Search for RAG (Retrieval Augmented Generation): query 10,000+ pages of HEDIS guidelines like talking to an expert
+- Genie natural language interface: business users ask "show me gaps over 10%" - AI writes SQL automatically
+
+**Why Payers Choose Databricks:**
+- Real-time analytics on live data (no overnight batch jobs or stale data warehouse copies)
+- Business user empowerment (quality analysts don't wait for IT tickets or data engineering)
+- Runs in your Azure/AWS cloud (you control security, compliance, and data residency)
+- Open ecosystem (works with existing tools: Tableau, Power BI, Epic, Cerner, claims systems)
+
+**In Healthcare:** 40% of Fortune 500 healthcare companies use Databricks for star ratings, risk adjustment (HCC), quality gap closure, population health, prior authorization, and fraud detection.
 
 ---
 
