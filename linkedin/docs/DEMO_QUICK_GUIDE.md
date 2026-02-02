@@ -5,39 +5,19 @@
 
 ## The Databricks Data Intelligence Platform
 
-**A Data Intelligence Platform goes beyond traditional data platforms** - it uses generative AI to understand your organization's unique data semantics, business logic, and relationships, not just store data. Built on lakehouse architecture, it unifies data warehousing (SQL, BI, governance) and data lakes (all data types, ML, scale) on open formats (Delta Lake, Iceberg, Parquet), eliminating silos and duplicate pipelines. **Unity Catalog** provides end-to-end governance - fine-grained access control, automated lineage, and compliance - for ALL assets: data tables, ML models, notebooks, dashboards, and AI functions in one control plane. The **Data Intelligence Engine** automatically optimizes performance, suggests joins, and answers questions in plain English by learning from your organization's SQL queries, dashboards, and business metrics. For healthcare payers, this means claims, clinical, member, and pharmacy data exist once, governed consistently, accessible to all teams (quality, actuarial, care management) with appropriate controls, ready for both traditional reporting AND advanced AI - without moving data between systems. The architecture diagram above shows the complete stack: data ingestion (ETL) → transformation (Spark/Photon) → warehousing (SQL) → AI (Mosaic AI with GenAI + Vector Search) → BI (Dashboards/Genie), all unified under Unity Catalog governance and Lakeflow orchestration.
+**Databricks is the only platform that unifies data, analytics, and AI with generative intelligence built in:**
 
----
+1. **Data Intelligence (Not Just Storage)** - AI understands your organization's unique data semantics, business logic, and relationships. The Data Intelligence Engine automatically optimizes queries, suggests joins, and answers questions in plain English by learning from your SQL patterns, dashboards, and business metrics.
 
-## What is Databricks?
+2. **Lakehouse Architecture (Eliminate Silos)** - Unifies data warehouse capabilities (SQL, BI, governance) + data lake scale (all data types, ML, streaming) on open formats (Delta Lake, Iceberg). Claims, clinical notes, member records, and pharmacy data exist once - no ETL between systems, no duplicate pipelines, no stale copies.
 
-**Databricks is a unified data and AI platform built on three core innovations:**
+3. **Unity Catalog (End-to-End Governance)** - Single control plane for ALL assets: data tables, ML models, notebooks, dashboards, and AI functions. Fine-grained access control (row/column level), automated lineage, HIPAA compliance with BAA, PHI protection. Quality, actuarial, and care management teams see the same source of truth with appropriate permissions.
 
-### 1. Data Lakehouse Architecture
-- Combines best of data warehouses (SQL analytics, BI) + data lakes (scalable storage, ML) in one platform
-- Eliminate ETL between systems - query all data types (structured claims, unstructured clinical notes, streaming) in one place
-- Delta Lake provides ACID transactions and time travel on cloud object storage (S3, Azure Blob)
-- No data silos: claims, clinical, member, pharmacy, and reference data unified under single governance layer
+4. **Built-In Production AI (No External APIs)** - Claude Sonnet 4.5, Llama, and Mistral run inside your cloud environment. AI Functions callable from SQL (no Python required). Genie natural language interface lets business users ask "show me gaps over 10%" and AI writes the SQL. Vector Search enables RAG over 10,000+ pages of HEDIS guidelines.
 
-### 2. Unity Catalog (Unified Governance)
-- Single place to manage all data, AI models, and notebooks across your entire organization
-- Fine-grained access control: row/column-level security, automatic audit logging, data lineage tracking
-- Share data securely across teams without copying: quality, actuarial, care management see same source of truth
-- HIPAA compliant with BAA: encryption at rest/in transit, automated compliance reporting, PHI protection
+5. **Real-Time Empowerment (No IT Bottlenecks)** - Quality analysts and care managers self-service on live data without waiting for overnight batch jobs or IT tickets. Export member lists in 2 minutes vs 2-3 days. Model star rating scenarios in 15 minutes vs 3 days in Excel.
 
-### 3. Built-In Production AI
-- Foundation models (Claude, Llama, Mistral) run inside your environment - no external APIs, no data leaving your cloud
-- AI Functions in Unity Catalog: classify, analyze, summarize data with one SQL line - no Python/ML expertise required
-- Vector Search for RAG (Retrieval Augmented Generation): query 10,000+ pages of HEDIS guidelines like talking to an expert
-- Genie natural language interface: business users ask "show me gaps over 10%" - AI writes SQL automatically
-
-**Why Payers Choose Databricks:**
-- Real-time analytics on live data (no overnight batch jobs or stale data warehouse copies)
-- Business user empowerment (quality analysts don't wait for IT tickets or data engineering)
-- Runs in your Azure/AWS cloud (you control security, compliance, and data residency)
-- Open ecosystem (works with existing tools: Tableau, Power BI, Epic, Cerner, claims systems)
-
-**In Healthcare:** 40% of Fortune 500 healthcare companies use Databricks for star ratings, risk adjustment (HCC), quality gap closure, population health, prior authorization, and fraud detection.
+6. **Proven in Healthcare** - 40% of Fortune 500 healthcare companies use Databricks for star ratings, risk adjustment (HCC), quality gap closure, population health, prior authorization, and fraud detection. #1 in 2025 Gartner Magic Quadrant for Data Science and ML Platforms.
 
 ---
 
