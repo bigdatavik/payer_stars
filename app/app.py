@@ -35,6 +35,7 @@ st.sidebar.markdown("""
 - 💡 **Improvement Planner** - Get recommendations
 - 📈 **Performance Dashboard** - View trends
 - 🌟 **Star Calculator** - Model scenarios
+- 📞 **Member Outreach** - Care manager portal
 """)
 
 # Main page
