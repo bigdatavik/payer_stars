@@ -276,27 +276,27 @@ if st.button("🔍 Load Member List", type="primary", use_container_width=True):
             'conditions': 'Chronic Conditions'
         }
     )
-        
-        # Export section
-        st.markdown("---")
-        st.markdown("### 📥 Step 4: Export Member List")
-        
-        export_col1, export_col2 = st.columns([3, 1])
-        
-        with export_col1:
-            st.info(f"""
-            **Export Details:**
-            - Total members: {len(members_df_display):,}
-            - Measure: {selected_measure['measure_name']}
-            - Gap Severity: {selected_measure['gap_severity']}
-            - Format: CSV (comma-separated values)
-            """)
-        
-        with export_col2:
-            # Generate CSV
-            csv_data = members_df_display.to_csv(index=False)
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"member_outreach_{selected_measure_id}_{timestamp}.csv"
+    
+    # Export section
+    st.markdown("---")
+    st.markdown("### 📥 Step 4: Export Member List")
+    
+    export_col1, export_col2 = st.columns([3, 1])
+    
+    with export_col1:
+        st.info(f"""
+        **Export Details:**
+        - Total members: {len(members_df_display):,}
+        - Measure: {selected_measure['measure_name']}
+        - Gap Severity: {selected_measure['gap_severity']}
+        - Format: CSV (comma-separated values)
+        """)
+    
+    with export_col2:
+        # Generate CSV
+        csv_data = members_df_display.to_csv(index=False)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"member_outreach_{selected_measure_id}_{timestamp}.csv"
             
             st.download_button(
                 label="⬇️ Download CSV",
