@@ -3,6 +3,27 @@
 
 ---
 
+## The Databricks Data Intelligence Platform
+
+**What makes it a "Data Intelligence Platform" vs traditional data platform?**
+
+Traditional data platforms force you to choose: data warehouse (structured data, SQL, BI) OR data lake (all data types, ML, scale). This creates silos, duplicate data, and governance headaches. **Databricks Data Intelligence Platform unifies everything with three breakthrough capabilities:**
+
+### 1. Built-In Intelligence (Not Just Storage)
+The platform includes a **Data Intelligence Engine** - generative AI that understands your organization's unique data semantics, business logic, and relationships. It automatically optimizes queries, suggests joins, and explains results in plain English. This is fundamentally different from passive storage systems that just hold data.
+
+### 2. Lakehouse Architecture (Best of Both Worlds)
+Combines data warehouse capabilities (ACID transactions, SQL analytics, BI) with data lake scalability (any data type, ML, streaming) on a single platform. Store claims, clinical notes, HL7 feeds, member records, pharmacy data - all in open formats (Delta Lake, Iceberg, Parquet) with full governance. No ETL between systems, no duplicate data.
+
+### 3. Unified Governance from Data to AI (Single Control Plane)
+**Unity Catalog** governs ALL assets - data tables, ML models, notebooks, dashboards, AI functions - in one place. Fine-grained access control (row/column level), automated lineage tracking, PII auto-classification, and HIPAA compliance across your entire analytics estate. Data engineers, data scientists, analysts, and business users all work from the same governed foundation.
+
+**The diagram above shows the complete platform architecture:** From data ingestion (ETL) through transformation (Spark/Photon), warehousing (Databricks SQL), AI (Mosaic AI with GenAI + Vector Search), to business intelligence (Dashboards/Genie) - all unified under a single governance layer (Unity Catalog) and orchestrated through workflow automation (Lakeflow Jobs).
+
+**For healthcare payers:** This means your claims, clinical, member, and pharmacy data exist once, governed consistently, accessible to all teams (quality, actuarial, care management) with appropriate controls, and ready for both traditional SQL reporting AND advanced AI use cases - without moving data between systems.
+
+---
+
 ## What is Databricks?
 
 **Databricks is a unified data and AI platform built on three core innovations:**
