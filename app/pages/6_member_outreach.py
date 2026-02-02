@@ -297,46 +297,46 @@ if st.button("🔍 Load Member List", type="primary", use_container_width=True):
         csv_data = members_df_display.to_csv(index=False)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"member_outreach_{selected_measure_id}_{timestamp}.csv"
-            
-            st.download_button(
-                label="⬇️ Download CSV",
-                data=csv_data,
-                file_name=filename,
-                mime="text/csv",
-                type="primary",
-                use_container_width=True
-            )
         
-        # Outreach recommendations
-        with st.expander("💡 Outreach Recommendations"):
-            st.markdown(f"""
-            **Recommended Outreach Strategy for {selected_measure['measure_name']}:**
-            
-            1. **Prioritization**
-               - Start with high-risk members (risk score > 3.0)
-               - Focus on members with multiple chronic conditions
-               - Target members in states with highest gaps
-            
-            2. **Outreach Methods**
-               - Phone calls for high-risk members
-               - Text messages for appointment reminders
-               - Mailings for education materials
-               - Care manager home visits for complex cases
-            
-            3. **Success Metrics**
-               - Response rate target: 60%
-               - Completion rate target: 40%
-               - Gap closure target: {selected_measure['gap_pct']:.1f} percentage points
-            
-            4. **Timeline**
-               - Week 1-2: Initial outreach and scheduling
-               - Week 3-6: Appointments and interventions
-               - Week 7-8: Follow-up and documentation
-            
-            5. **Resources Needed**
-               - Care managers: {max(1, len(members_df_display) // 100)} FTE
-               - Budget estimate: ${len(members_df_display) * 50:,.0f} (at $50/member)
-            """)
+        st.download_button(
+            label="⬇️ Download CSV",
+            data=csv_data,
+            file_name=filename,
+            mime="text/csv",
+            type="primary",
+            use_container_width=True
+        )
+    
+    # Outreach recommendations
+    with st.expander("💡 Outreach Recommendations"):
+        st.markdown(f"""
+        **Recommended Outreach Strategy for {selected_measure['measure_name']}:**
+        
+        1. **Prioritization**
+           - Start with high-risk members (risk score > 3.0)
+           - Focus on members with multiple chronic conditions
+           - Target members in states with highest gaps
+        
+        2. **Outreach Methods**
+           - Phone calls for high-risk members
+           - Text messages for appointment reminders
+           - Mailings for education materials
+           - Care manager home visits for complex cases
+        
+        3. **Success Metrics**
+           - Response rate target: 60%
+           - Completion rate target: 40%
+           - Gap closure target: {selected_measure['gap_pct']:.1f} percentage points
+        
+        4. **Timeline**
+           - Week 1-2: Initial outreach and scheduling
+           - Week 3-6: Appointments and interventions
+           - Week 7-8: Follow-up and documentation
+        
+        5. **Resources Needed**
+           - Care managers: {max(1, len(members_df_display) // 100)} FTE
+           - Budget estimate: ${len(members_df_display) * 50:,.0f} (at $50/member)
+        """)
 
 # Help section
 st.markdown("---")
