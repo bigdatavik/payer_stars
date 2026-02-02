@@ -90,6 +90,18 @@
 
 ## ROI Summary (Deliver This Message)
 
+**The CMS Timeline Problem:**
+- CMS 2026 Star Ratings (announced Oct 2025) measure 2024 performance—**12-18 month lag**
+- By the time you see your score, it's too late to fix that measurement year
+- External vendors (Inovalon, Cotiviti) add reporting cycles—weeks/months for insights
+- **You're flying blind until scores drop**, then scrambling to react
+
+**This Solution = Real-Time Intelligence:**
+- Track performance continuously throughout the measurement year, not 9-12 months later
+- Model "what if" scenarios daily: "If we close BCS gaps by 5%, what's our star impact?"
+- Intervene BEFORE the measurement year ends, not after CMS publishes results
+- Works alongside external vendors—you keep control and visibility of your data
+
 **Time Savings:**
 - Root cause analysis: 3-5 days → 30 seconds (95% reduction)
 - Member list generation: 2-3 days → 2 minutes (20x faster)  
@@ -123,6 +135,9 @@ A: Databricks is HIPAA compliant with BAA. Data stays in your environment, role-
 
 **Q: Cost?**  
 A: Consumption-based, typically $100-200K/year for mid-size plan. Given $5-7M ROI, payback is 1-2 months.
+
+**Q: What about external vendors like Inovalon or Cotiviti?**  
+A: This complements, not replaces them. Use vendors for official HEDIS submission if needed, but keep real-time control and visibility of your data. Don't wait 9-12 months to find out your score dropped—track and intervene daily.
 
 **Q: Can we customize?**  
 A: Yes. Open source code on GitHub, your team owns it. Fine-tune AI models, add workflows, extend features.
