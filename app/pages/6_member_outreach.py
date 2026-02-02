@@ -7,7 +7,8 @@ import streamlit as st
 import pandas as pd
 import os
 from datetime import datetime
-import random
+from databricks import sql
+from databricks.sdk.core import Config
 
 # Set wide layout
 st.set_page_config(layout="wide", page_title="Member Outreach")
@@ -22,6 +23,7 @@ Select a measure, apply filters, and export member lists for outreach campaigns.
 # Configuration
 CATALOG = os.getenv("CATALOG_NAME", "payer_stars_dev")
 SCHEMA = os.getenv("SCHEMA_NAME", "star_ratings")
+WAREHOUSE_ID = os.getenv("DATABRICKS_WAREHOUSE_ID", "148ccb90800933a1")
 
 # Initialize session state
 if 'outreach_selected_measure' not in st.session_state:
@@ -29,134 +31,86 @@ if 'outreach_selected_measure' not in st.session_state:
 if 'outreach_members_df' not in st.session_state:
     st.session_state.outreach_members_df = None
 
-# Static measure data (like other pages)
-MEASURES_DATA = {
-    "BCS - Breast Cancer Screening": {
-        "measure_id": "BCS",
-        "gap_severity": "Critical",
-        "gap_pct": 13.0,
-        "performance_pct": 62.0,
-        "target_pct": 75.0,
-        "eligible_members": 10000,
-        "domain": "Preventive",
-        "weight": 1,
-        "eligibility": "Women aged 50-74"
-    },
-    "CDC - Comprehensive Diabetes Care": {
-        "measure_id": "CDC",
-        "gap_severity": "Moderate",
-        "gap_pct": 12.0,
-        "performance_pct": 68.0,
-        "target_pct": 80.0,
-        "eligible_members": 15000,
-        "domain": "Outcomes",
-        "weight": 3,
-        "eligibility": "Members with Diabetes Type 2"
-    },
-    "CBP - Controlling High Blood Pressure": {
-        "measure_id": "CBP",
-        "gap_severity": "Critical",
-        "gap_pct": 13.0,
-        "performance_pct": 65.0,
-        "target_pct": 78.0,
-        "eligible_members": 20000,
-        "domain": "Outcomes",
-        "weight": 3,
-        "eligibility": "Members with Hypertension"
-    },
-    "MPM - Medication Adherence for Diabetes": {
-        "measure_id": "MPM",
-        "gap_severity": "Moderate",
-        "gap_pct": 10.0,
-        "performance_pct": 72.0,
-        "target_pct": 82.0,
-        "eligible_members": 12000,
-        "domain": "Part D",
-        "weight": 3,
-        "eligibility": "Members with Diabetes Type 2"
-    },
-    "COL - Colorectal Cancer Screening": {
-        "measure_id": "COL",
-        "gap_severity": "Moderate",
-        "gap_pct": 9.0,
-        "performance_pct": 66.0,
-        "target_pct": 75.0,
-        "eligible_members": 18000,
-        "domain": "Preventive",
-        "weight": 1,
-        "eligibility": "Adults aged 50-75"
-    }
-}
+# Database connection - EXACT SAME PATTERN as Performance Dashboard
+def get_sql_connection():
+    """Create Databricks SQL connection - same pattern as Performance Dashboard"""
+    try:
+        cfg = Config()
+        return sql.connect(
+            server_hostname=cfg.host,
+            http_path=f"/sql/1.0/warehouses/{WAREHOUSE_ID}",
+            credentials_provider=lambda: cfg.authenticate,
+        )
+    except Exception as e:
+        st.error(f"SQL Connection error: {e}")
+        return None
 
-# Generate sample member data
-def generate_sample_members(measure_id, num_members=100):
-    """Generate realistic sample member data for demo"""
-    random.seed(42)  # Consistent data
-    
-    members = []
-    for i in range(num_members):
-        # Base demographics
-        age = random.randint(50, 85)
-        gender = random.choice(['M', 'F'])
-        state = random.choice(['CA', 'FL', 'TX', 'NY', 'PA', 'OH', 'IL', 'AZ'])
-        plan_type = random.choice(['HMO', 'PPO', 'SNP'])
+def execute_query(query):
+    """Execute SQL query and return DataFrame"""
+    try:
+        conn = get_sql_connection()
+        if conn is None:
+            return None
         
-        # Chronic conditions
-        all_conditions = ['Diabetes Type 2', 'Hypertension', 'Hyperlipidemia', 
-                         'COPD', 'Asthma', 'Coronary Artery Disease']
-        num_conditions = random.randint(1, 4)
-        conditions = random.sample(all_conditions, num_conditions)
+        with conn.cursor() as cursor:
+            cursor.execute(query)
+            results = cursor.fetchall()
+            columns = [desc[0] for desc in cursor.description]
         
-        # Apply measure-specific eligibility
-        if measure_id == 'BCS':
-            gender = 'F'
-            age = random.randint(50, 74)
-        elif measure_id in ['CDC', 'MPM']:
-            if 'Diabetes Type 2' not in conditions:
-                conditions.append('Diabetes Type 2')
-                num_conditions = len(conditions)
-        elif measure_id == 'CBP':
-            if 'Hypertension' not in conditions:
-                conditions.append('Hypertension')
-                num_conditions = len(conditions)
-        elif measure_id == 'COL':
-            age = random.randint(50, 75)
-        
-        risk_score = round(1.0 + (age - 50)/30 + num_conditions * 0.3 + random.uniform(-0.2, 0.3), 2)
-        
-        members.append({
-            'member_id': f'MEM-{10000 + i:05d}',
-            'age': age,
-            'gender': gender,
-            'state': state,
-            'plan_type': plan_type,
-            'conditions': conditions,
-            'num_conditions': num_conditions,
-            'risk_score': risk_score,
-            'gap_severity': random.choice(['Critical', 'Moderate', 'Minor'])
-        })
-    
-    # Sort by risk score descending
-    members.sort(key=lambda x: x['risk_score'], reverse=True)
-    
-    return pd.DataFrame(members)
-# Measure selection
+        return pd.DataFrame(results, columns=columns)
+    except Exception as e:
+        st.error(f"Query execution failed: {e}")
+        return None
+
+# Load measures from database
 st.markdown("---")
 st.markdown("### 📊 Step 1: Select HEDIS Measure")
 
-col1, col2 = st.columns([3, 1])
+with st.spinner("Loading measures with gaps..."):
+    measures_query = f"""
+    SELECT 
+        measure_id,
+        measure_name,
+        gap_severity,
+        ROUND(gap * 100, 1) as gap_pct,
+        ROUND(performance_rate * 100, 1) as performance_pct,
+        ROUND(target_benchmark * 100, 1) as target_pct,
+        denominator as eligible_members
+    FROM {CATALOG}.{SCHEMA}.measures_data
+    WHERE gap_severity IN ('Critical', 'Moderate', 'Minor')
+    ORDER BY 
+        CASE gap_severity 
+            WHEN 'Critical' THEN 1 
+            WHEN 'Moderate' THEN 2 
+            WHEN 'Minor' THEN 3 
+        END,
+        gap DESC
+    LIMIT 10
+    """
+    
+    measures_df = execute_query(measures_query)
 
-with col1:
-    selected_display = st.selectbox(
-        "Select measure to target for outreach:",
-        options=list(MEASURES_DATA.keys()),
-        help="Measures with performance gaps for targeted outreach"
-    )
+if measures_df is not None and len(measures_df) > 0:
+    # Create measure display options
+    measure_options = {}
+    for _, row in measures_df.iterrows():
+        display_name = f"{row['measure_id']} - {row['measure_name']} ({row['gap_severity']}, {row['gap_pct']}% gap)"
+        measure_options[display_name] = row['measure_id']
     
-selected_measure = MEASURES_DATA[selected_display]
-selected_measure_id = selected_measure['measure_id']
-st.session_state.outreach_selected_measure = selected_measure_id
+    # Measure selection
+    col1, col2 = st.columns([3, 1])
     
+    with col1:
+        selected_display = st.selectbox(
+            "Select measure to target for outreach:",
+            options=list(measure_options.keys()),
+            help="Measures sorted by gap severity and size"
+        )
+        selected_measure_id = measure_options[selected_display]
+        st.session_state.outreach_selected_measure = selected_measure_id
+    
+    # Get selected measure details
+    selected_measure = measures_df[measures_df['measure_id'] == selected_measure_id].iloc[0]
     # Display measure metrics
     st.markdown("#### Measure Performance")
     metric_col1, metric_col2, metric_col3, metric_col4 = st.columns(4)
@@ -172,8 +126,8 @@ st.session_state.outreach_selected_measure = selected_measure_id
         severity_emoji = {"Critical": "🔴", "Moderate": "🟡", "Minor": "🟢"}
         st.metric("Severity", f"{severity_emoji.get(selected_measure['gap_severity'], '')} {selected_measure['gap_severity']}")
     
-# Show measure-specific eligibility info  
-st.info(f"ℹ️ 👥 Eligible Population: {selected_measure['eligibility']} (automatic eligibility filter applied)")
+# Show eligibility note
+st.info(f"ℹ️ 👥 Showing sample of eligible members for outreach (filtered by measure eligibility)")
 
 # Filters section
 st.markdown("---")
@@ -187,7 +141,7 @@ with st.expander("Advanced Filters", expanded=False):
             "Age Range",
             min_value=18,
             max_value=95,
-            value=(65, 85),
+            value=(50, 85),
             help="Filter members by age"
         )
         
@@ -195,75 +149,83 @@ with st.expander("Advanced Filters", expanded=False):
             "Risk Score Range",
             min_value=0.5,
             max_value=5.0,
-            value=(1.0, 5.0),
+            value=(1.5, 5.0),
             step=0.1,
             help="HCC-based risk score"
         )
     
     with filter_col2:
         selected_states = st.multiselect(
-            "States",
+            "States (optional)",
             options=["CA", "FL", "TX", "NY", "PA", "OH", "IL", "AZ"],
             default=None,
             help="Filter by member state"
         )
         
         selected_plan_types = st.multiselect(
-            "Plan Type",
-            options=["HMO", "PPO", "SNP"],
+            "Plan Type (optional)",
+            options=["HMO", "PPO", "SNP", "PFFS", "MSA"],
             default=None,
             help="Filter by plan type"
         )
     
     with filter_col3:
-        selected_conditions = st.multiselect(
-            "Chronic Conditions",
-            options=["Diabetes Type 2", "Hypertension", "Hyperlipidemia", "COPD", "Asthma", "Coronary Artery Disease"],
-            default=None,
-            help="Members must have ALL selected conditions"
-        )
-        
         min_conditions = st.number_input(
             "Min. Chronic Conditions",
             min_value=0,
             max_value=10,
-            value=0,
+            value=2,
             help="Minimum number of chronic conditions"
         )
 
 # Load members button
 if st.button("🔍 Load Member List", type="primary", use_container_width=True):
     with st.spinner("Loading members..."):
-        # Generate sample members for selected measure
-        members_df = generate_sample_members(selected_measure_id, num_members=200)
+        # Build WHERE clause with filters
+        where_conditions = [
+            "m.star_eligible = true",
+            "m.enrollment_status = 'Active'",
+            f"m.age BETWEEN {age_range[0]} AND {age_range[1]}",
+            f"m.risk_score BETWEEN {risk_score_range[0]} AND {risk_score_range[1]}",
+            f"m.num_conditions >= {min_conditions}"
+        ]
         
-        # Apply filters
-        filtered_df = members_df.copy()
-        
-        # Age filter
-        filtered_df = filtered_df[(filtered_df['age'] >= age_range[0]) & (filtered_df['age'] <= age_range[1])]
-        
-        # Risk score filter
-        filtered_df = filtered_df[(filtered_df['risk_score'] >= risk_score_range[0]) & (filtered_df['risk_score'] <= risk_score_range[1])]
-        
-        # State filter
+        # Add state filter
         if selected_states:
-            filtered_df = filtered_df[filtered_df['state'].isin(selected_states)]
+            states_str = "', '".join(selected_states)
+            where_conditions.append(f"m.state IN ('{states_str}')")
         
-        # Plan type filter
+        # Add plan type filter
         if selected_plan_types:
-            filtered_df = filtered_df[filtered_df['plan_type'].isin(selected_plan_types)]
+            plans_str = "', '".join(selected_plan_types)
+            where_conditions.append(f"m.plan_type IN ('{plans_str}')")
         
-        # Conditions filter
-        if selected_conditions:
-            for condition in selected_conditions:
-                filtered_df = filtered_df[filtered_df['conditions'].apply(lambda x: condition in x)]
+        where_clause = " AND ".join(where_conditions)
         
-        # Min conditions filter
-        filtered_df = filtered_df[filtered_df['num_conditions'] >= min_conditions]
+        # Query members
+        members_query = f"""
+        SELECT 
+            m.member_id,
+            m.age,
+            m.gender,
+            m.state,
+            m.plan_type,
+            m.conditions,
+            m.num_conditions,
+            ROUND(m.risk_score, 2) as risk_score
+        FROM {CATALOG}.{SCHEMA}.member_enrollments m
+        WHERE {where_clause}
+        ORDER BY m.risk_score DESC, m.num_conditions DESC
+        LIMIT 200
+        """
         
-        st.session_state.outreach_members_df = filtered_df
-        st.success(f"✅ Loaded {len(filtered_df):,} members for outreach")
+        members_result_df = execute_query(members_query)
+        
+        if members_result_df is not None:
+            st.session_state.outreach_members_df = members_result_df
+            st.success(f"✅ Loaded {len(members_result_df):,} members for outreach")
+        else:
+            st.error("Failed to load members")
     
     # Display results
     if st.session_state.outreach_members_df is not None:
@@ -295,11 +257,11 @@ if st.button("🔍 Load Member List", type="primary", use_container_width=True):
     display_df = members_df_display.copy()
     display_df['conditions'] = display_df['conditions'].apply(lambda x: ', '.join(x) if isinstance(x, list) else str(x))
     
-    # Display with default columns
+    # Display with column config
     st.dataframe(
         display_df[[
             'member_id', 'age', 'gender', 'state', 'plan_type',
-            'num_conditions', 'risk_score', 'gap_severity', 'conditions'
+            'num_conditions', 'risk_score', 'conditions'
         ]],
         use_container_width=True,
         height=400,
@@ -311,7 +273,6 @@ if st.button("🔍 Load Member List", type="primary", use_container_width=True):
             'plan_type': 'Plan',
             'num_conditions': '# Conditions',
             'risk_score': 'Risk Score',
-            'gap_severity': 'Gap',
             'conditions': 'Chronic Conditions'
         }
     )
