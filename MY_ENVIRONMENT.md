@@ -1,1 +1,0 @@
-/Users/vik.malhotra/.cursor-standards/MY_ENVIRONMENT.md
