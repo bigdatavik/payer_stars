@@ -28,34 +28,34 @@ environments:
     setup_job_url: "https://adb-984752964297111.11.azuredatabricks.net/jobs/675854142625590?o=984752964297111"
 
   staging:
-    workspace_host: "https://adb-984752964297111.11.azuredatabricks.net" # Same workspace as dev
-    profile: "DEFAULT_azure" # Same profile
-    catalog: "payer_stars_staging" # Different catalog for separation
+    workspace_host: "https://fevm-serverless-mwelio-humana.cloud.databricks.com/"
+    profile: "FEVM_aws"
+    catalog: "payer_stars_staging"
     schema: "star_ratings"
-    warehouse_id: "148ccb90800933a1" # Can use same warehouse
+    warehouse_id: "4edfc95001a4c63d" # From FEVM workspace; update if your staging warehouse differs
     vector_endpoint: "one-env-shared-endpoint-2"
     llm_endpoint: "databricks-claude-sonnet-4-5"
-    app_name: "payerstars-staging" # Hyphens, not underscores!
-    genie_space_id: "" # REQUIRED: Get this from setup/14_create_genie_space.py output
+    app_name: "payerstars-staging"
+    genie_space_id: ""
 
-    # Setup Resources URLs (update these for staging environment)
-    notebooks_folder_url: "" # TODO: Update after staging deployment
-    setup_job_url: "" # TODO: Update after staging deployment
+    # Setup Resources URLs (update after staging deployment)
+    notebooks_folder_url: ""
+    setup_job_url: ""
 
   prod:
-    workspace_host: "https://fe-vm-industry-solutions-buildathon.cloud.databricks.com"
-    profile: "DEFAULT_fevm" # Different profile for prod
-    catalog: "payer_stars_prod" # Different catalog for separation
+    workspace_host: "https://fevm-serverless-mwelio-humana.cloud.databricks.com/"
+    profile: "FEVM_aws"
+    catalog: "payer_stars_prod"
     schema: "star_ratings"
-    warehouse_id: "159828d8fa91cd28" # Different warehouse for prod
+    warehouse_id: "4edfc95001a4c63d" # From FEVM workspace; update if your prod warehouse differs
     vector_endpoint: "one-env-shared-endpoint-2"
     llm_endpoint: "databricks-claude-sonnet-4-5"
-    app_name: "payerstars-prod" # Hyphens, not underscores!
-    genie_space_id: "" # REQUIRED: Get this from setup/14_create_genie_space.py output
+    app_name: "payerstars-prod"
+    genie_space_id: ""
 
-    # Setup Resources URLs (update these for prod environment)
-    notebooks_folder_url: "" # TODO: Update after prod deployment
-    setup_job_url: "" # TODO: Update after prod deployment
+    # Setup Resources URLs (update after prod deployment)
+    notebooks_folder_url: ""
+    setup_job_url: ""
 
 # Common configuration (shared across all environments)
 common:

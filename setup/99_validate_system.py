@@ -7,6 +7,16 @@
 
 # COMMAND ----------
 
+# Ensure Environment widget exists (use current value so job-injected value is preserved)
+try:
+    _current = dbutils.widgets.get("environment")
+except Exception:
+    _current = "dev"
+dbutils.widgets.dropdown("environment", _current, ["dev", "staging", "prod"], "Environment")
+print(f"Environment: {_current} (change the dropdown if needed, then re-run the next cell)")
+
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC ## Setup
 
@@ -21,7 +31,8 @@ import json
 from datetime import datetime
 from pyspark.sql import functions as F
 
-cfg = get_config()
+env_from_widget = dbutils.widgets.get("environment")
+cfg = get_config(environment=env_from_widget)
 
 print("=" * 80)
 print("PAYER STAR RATINGS SYSTEM VALIDATION")

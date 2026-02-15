@@ -7,6 +7,16 @@
 
 # COMMAND ----------
 
+# Ensure Environment widget exists (use current value so job-injected value is preserved)
+try:
+    _current = dbutils.widgets.get("environment")
+except Exception:
+    _current = "dev"
+dbutils.widgets.dropdown("environment", _current, ["dev", "staging", "prod"], "Environment")
+print(f"Environment: {_current} (change the dropdown if needed, then re-run the next cell)")
+
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC ## Install Dependencies
 
@@ -31,7 +41,8 @@ from databricks.sdk import WorkspaceClient
 from databricks.vector_search.client import VectorSearchClient
 import time
 
-cfg = get_config()
+env_from_widget = dbutils.widgets.get("environment")
+cfg = get_config(environment=env_from_widget)
 
 print(f"Vector Endpoint:    {cfg.vector_endpoint}")
 print(f"Knowledge Base:     {cfg.hedis_guidelines_kb}")

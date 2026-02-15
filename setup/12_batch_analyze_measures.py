@@ -6,6 +6,16 @@
 
 # COMMAND ----------
 
+# Ensure Environment widget exists (use current value so job-injected value is preserved)
+try:
+    _current = dbutils.widgets.get("environment")
+except Exception:
+    _current = "dev"
+dbutils.widgets.dropdown("environment", _current, ["dev", "staging", "prod"], "Environment")
+print(f"Environment: {_current} (change the dropdown if needed, then re-run the next cell)")
+
+# COMMAND ----------
+
 import sys
 import os
 sys.path.append(os.path.abspath('..'))
@@ -13,7 +23,8 @@ from shared.config import get_config
 from datetime import datetime
 import uuid
 
-cfg = get_config()
+env_from_widget = dbutils.widgets.get("environment")
+cfg = get_config(environment=env_from_widget)
 
 # COMMAND ----------
 
@@ -97,6 +108,6 @@ schema = StructType([
 ])
 
 analysis_df = spark.createDataFrame(analysis_results, schema)
-analysis_df.write.mode("append").saveAsTable(cfg.star_analysis)
+analysis_df.write.mode("overwrite").saveAsTable(cfg.star_analysis)
 
 print(f"✅ Wrote {len(analysis_results)} analysis results to {cfg.star_analysis}")

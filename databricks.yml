@@ -19,48 +19,42 @@ targets:
       host: https://adb-984752964297111.11.azuredatabricks.net
       profile: DEFAULT_azure
 
+  staging:
+    mode: development
+    variables:
+      environment: staging
+    workspace:
+      host: https://fevm-serverless-mwelio-humana.cloud.databricks.com
+      profile: FEVM_aws
+
+  prod:
+    mode: production
+    variables:
+      environment: prod
+    workspace:
+      host: https://fevm-serverless-mwelio-humana.cloud.databricks.com
+      profile: FEVM_aws
+      root_path: /Workspace/Users/vik.malhotra@databricks.com/.bundle/payer_star_ratings/prod
+
 resources:
   jobs:
     setup_star_ratings:
       name: payer_stars_setup_${var.environment}
-      
-      job_clusters:
-        - job_cluster_key: main_cluster
-          new_cluster:
-            spark_version: "16.4.x-scala2.12"
-            node_type_id: "Standard_DS3_v2"
-            num_workers: 2
-            data_security_mode: "USER_ISOLATION"
-            custom_tags:
-              project: "payer-star-ratings"
-              environment: "${bundle.target}"
-      
+
+      # Serverless compute (no job_clusters) for workspaces that only support serverless
       parameters:
         - name: environment
           default: ${var.environment}
-      
+
       tasks:
-        - task_key: cleanup
-          job_cluster_key: main_cluster
-          notebook_task:
-            notebook_path: ./setup/00_CLEANUP.py
-            base_parameters:
-              environment: ${var.environment}
-          timeout_seconds: 600
-        
-        
         - task_key: create_catalog
-          job_cluster_key: main_cluster
-          depends_on:
-            - task_key: cleanup
           notebook_task:
             notebook_path: ./setup/01_create_catalog_schema.py
             base_parameters:
               environment: ${var.environment}
           timeout_seconds: 900
-        
+
         - task_key: generate_measures_data
-          job_cluster_key: main_cluster
           depends_on:
             - task_key: create_catalog
           notebook_task:
@@ -68,9 +62,8 @@ resources:
             base_parameters:
               environment: ${var.environment}
           timeout_seconds: 1200
-        
+
         - task_key: generate_member_data
-          job_cluster_key: main_cluster
           depends_on:
             - task_key: generate_measures_data
           notebook_task:
@@ -78,9 +71,8 @@ resources:
             base_parameters:
               environment: ${var.environment}
           timeout_seconds: 1200
-        
+
         - task_key: create_uc_classify
-          job_cluster_key: main_cluster
           depends_on:
             - task_key: generate_member_data
           notebook_task:
@@ -88,9 +80,8 @@ resources:
             base_parameters:
               environment: ${var.environment}
           timeout_seconds: 900
-        
+
         - task_key: create_uc_analyze
-          job_cluster_key: main_cluster
           depends_on:
             - task_key: create_uc_classify
           notebook_task:
@@ -98,9 +89,8 @@ resources:
             base_parameters:
               environment: ${var.environment}
           timeout_seconds: 900
-        
+
         - task_key: create_uc_recommend
-          job_cluster_key: main_cluster
           depends_on:
             - task_key: create_uc_analyze
           notebook_task:
@@ -108,9 +98,8 @@ resources:
             base_parameters:
               environment: ${var.environment}
           timeout_seconds: 900
-        
+
         - task_key: create_uc_explain
-          job_cluster_key: main_cluster
           depends_on:
             - task_key: create_uc_recommend
           notebook_task:
@@ -118,9 +107,8 @@ resources:
             base_parameters:
               environment: ${var.environment}
           timeout_seconds: 900
-        
+
         - task_key: create_knowledge_base
-          job_cluster_key: main_cluster
           depends_on:
             - task_key: create_uc_explain
           notebook_task:
@@ -128,9 +116,8 @@ resources:
             base_parameters:
               environment: ${var.environment}
           timeout_seconds: 1200
-        
+
         - task_key: chunk_knowledge_base
-          job_cluster_key: main_cluster
           depends_on:
             - task_key: create_knowledge_base
           notebook_task:
@@ -138,9 +125,8 @@ resources:
             base_parameters:
               environment: ${var.environment}
           timeout_seconds: 1200
-        
+
         - task_key: create_vector_index
-          job_cluster_key: main_cluster
           depends_on:
             - task_key: chunk_knowledge_base
           notebook_task:
@@ -148,9 +134,8 @@ resources:
             base_parameters:
               environment: ${var.environment}
           timeout_seconds: 1800
-        
+
         - task_key: create_analysis_table
-          job_cluster_key: main_cluster
           depends_on:
             - task_key: create_vector_index
           notebook_task:
@@ -158,9 +143,8 @@ resources:
             base_parameters:
               environment: ${var.environment}
           timeout_seconds: 900
-        
+
         - task_key: batch_analyze_measures
-          job_cluster_key: main_cluster
           depends_on:
             - task_key: create_analysis_table
           notebook_task:
@@ -168,9 +152,8 @@ resources:
             base_parameters:
               environment: ${var.environment}
           timeout_seconds: 1800
-        
+
         - task_key: create_predictions
-          job_cluster_key: main_cluster
           depends_on:
             - task_key: batch_analyze_measures
           notebook_task:
@@ -178,9 +161,8 @@ resources:
             base_parameters:
               environment: ${var.environment}
           timeout_seconds: 900
-        
+
         - task_key: create_genie_space
-          job_cluster_key: main_cluster
           depends_on:
             - task_key: create_predictions
           notebook_task:
@@ -188,8 +170,7 @@ resources:
             base_parameters:
               environment: ${var.environment}
           timeout_seconds: 900
-  
-  
+
   # Databricks App - Streamlit Dashboard
   apps:
     payer_stars_app:

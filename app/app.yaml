@@ -1,19 +1,19 @@
 # ✅ CORRECT - Official Microsoft Pattern
 # 🤖 AUTO-GENERATED from config.yaml - DO NOT EDIT DIRECTLY!
-# Run: python generate_app_yaml.py dev
+# Run: python generate_app_yaml.py staging
 
 command: ['streamlit', 'run', 'app.py']
 
 env:
   # Core Databricks connection
   - name: 'DATABRICKS_HOST'
-    value: 'adb-984752964297111.11.azuredatabricks.net'
+    value: 'adb-7405607054632896.16.azuredatabricks.net'
   - name: 'DATABRICKS_WAREHOUSE_ID'
-    value: '148ccb90800933a1'
+    value: '3a28a7b874f2413c'
   
   # Unity Catalog configuration
   - name: 'CATALOG_NAME'
-    value: 'payer_stars_dev'
+    value: 'payer_stars_staging'
   - name: 'SCHEMA_NAME'
     value: 'star_ratings'
   
@@ -31,13 +31,13 @@ env:
   
   # Setup Resources URLs (for Setup Resources page)
   - name: 'NOTEBOOKS_FOLDER_URL'
-    value: 'https://adb-984752964297111.11.azuredatabricks.net/browse/folders/908565040797499?o=984752964297111'
+    value: ''
   - name: 'SETUP_JOB_URL'
-    value: 'https://adb-984752964297111.11.azuredatabricks.net/jobs/675854142625590?o=984752964297111'
+    value: ''
   
   # Environment identifier
   - name: 'ENVIRONMENT'
-    value: 'dev'
+    value: 'staging'
   
   # Embedding model for vector search
   - name: 'EMBEDDING_MODEL'

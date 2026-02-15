@@ -10,6 +10,16 @@
 
 # COMMAND ----------
 
+# Ensure Environment widget exists (use current value so job-injected value is preserved)
+try:
+    _current = dbutils.widgets.get("environment")
+except Exception:
+    _current = "dev"
+dbutils.widgets.dropdown("environment", _current, ["dev", "staging", "prod"], "Environment")
+print(f"Environment: {_current} (change the dropdown if needed, then re-run the next cell)")
+
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC ## Test 1: Basic Spark Operation
 
@@ -44,7 +54,8 @@ sys.path.append(os.path.abspath('..'))
 
 try:
     from shared.config import get_config, print_config
-    cfg = get_config()
+    env_from_widget = dbutils.widgets.get("environment")
+    cfg = get_config(environment=env_from_widget)
     
     print("✅ Config module imported successfully!")
     print_config(cfg)

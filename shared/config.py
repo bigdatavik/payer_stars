@@ -116,12 +116,17 @@ def get_config(environment: Optional[str] = None) -> StarRatingsConfig:
     if environment is None:
         # Try DAB widget (only works in Databricks notebooks)
         try:
-            # Check if dbutils is available
             import builtins
             if hasattr(builtins, 'dbutils'):
+                # When run by job (bundle run --target staging), job sets this widget.
+                # When run manually, create widget if missing so user can select dev/staging/prod.
+                try:
+                    _ = dbutils.widgets.get("environment")  # type: ignore
+                except Exception:
+                    dbutils.widgets.dropdown("environment", "dev", ["dev", "staging", "prod"], "Environment")  # type: ignore
                 environment = dbutils.widgets.get("environment")  # type: ignore
                 print(f"✅ Using environment from DAB widget: {environment}")
-        except:
+        except Exception:
             pass
     
     if environment is None:
