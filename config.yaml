@@ -28,34 +28,34 @@ environments:
     setup_job_url: "https://adb-984752964297111.11.azuredatabricks.net/jobs/675854142625590?o=984752964297111"
 
   staging:
-    workspace_host: "https://fevm-serverless-mwelio-humana.cloud.databricks.com/"
-    profile: "FEVM_aws"
-    catalog: "payer_stars_staging"
+    workspace_host: "https://fevm-serverless-mwelio-humana.cloud.databricks.com" # Same workspace as prod
+    profile: "FEVM_aws" # Same profile as prod
+    catalog: "humana_payer" # Pre-created catalog
     schema: "star_ratings"
-    warehouse_id: "4edfc95001a4c63d" # From FEVM workspace; update if your staging warehouse differs
+    warehouse_id: "6b2808a405a0375a"
     vector_endpoint: "one-env-shared-endpoint-2"
     llm_endpoint: "databricks-claude-sonnet-4-5"
-    app_name: "payerstars-staging"
-    genie_space_id: ""
+    app_name: "payerstars-staging" # Hyphens, not underscores!
+    genie_space_id: "" # REQUIRED: Get this from setup/14_create_genie_space.py output
 
-    # Setup Resources URLs (update after staging deployment)
-    notebooks_folder_url: ""
-    setup_job_url: ""
+    # Setup Resources URLs (update these for staging environment)
+    notebooks_folder_url: "" # TODO: Update after staging deployment
+    setup_job_url: "" # TODO: Update after staging deployment
 
   prod:
-    workspace_host: "https://fevm-serverless-mwelio-humana.cloud.databricks.com/"
+    workspace_host: "https://fevm-serverless-mwelio-humana.cloud.databricks.com"
     profile: "FEVM_aws"
-    catalog: "payer_stars_prod"
+    catalog: "humana_payer" # Pre-created catalog
     schema: "star_ratings"
-    warehouse_id: "4edfc95001a4c63d" # From FEVM workspace; update if your prod warehouse differs
+    warehouse_id: "6b2808a405a0375a"
     vector_endpoint: "one-env-shared-endpoint-2"
     llm_endpoint: "databricks-claude-sonnet-4-5"
-    app_name: "payerstars-prod"
-    genie_space_id: ""
+    app_name: "payerstars-prod" # Hyphens, not underscores!
+    genie_space_id: "" # REQUIRED: Get this from setup/14_create_genie_space.py output
 
-    # Setup Resources URLs (update after prod deployment)
-    notebooks_folder_url: ""
-    setup_job_url: ""
+    # Setup Resources URLs (update these for prod environment)
+    notebooks_folder_url: "" # TODO: Update after prod deployment
+    setup_job_url: "" # TODO: Update after prod deployment
 
 # Common configuration (shared across all environments)
 common:

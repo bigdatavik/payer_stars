@@ -43,6 +43,11 @@ print(f"✅ Spark version: {spark.version}")
 
 # COMMAND ----------
 
+# MAGIC %pip install pyyaml --quiet
+dbutils.library.restartPython()
+
+# COMMAND ----------
+
 print("=" * 80)
 print("TEST 2: Configuration Module")
 print("=" * 80)

@@ -164,10 +164,18 @@ for i in {1..12}; do
     sleep 10
 done
 
-# Deploy app source code
+# Deploy app source code (script starts app if stopped and retries on "active deployment in progress")
 ./deploy_app_source.sh ${ENVIRONMENT}
 
 DEPLOY_EXIT_CODE=$?
+
+if [ $DEPLOY_EXIT_CODE -ne 0 ]; then
+    echo ""
+    echo -e "${YELLOW}⏳ App deploy failed; waiting 90s then retrying once...${NC}"
+    sleep 90
+    ./deploy_app_source.sh ${ENVIRONMENT}
+    DEPLOY_EXIT_CODE=$?
+fi
 
 if [ $DEPLOY_EXIT_CODE -ne 0 ]; then
     echo ""

@@ -56,9 +56,6 @@ An intelligent **Medicare Advantage Star Ratings** analysis and improvement syst
 │     Run 6 commands separately                                         │
 │     ✅ Same auto-recovery in step 5                                   │
 │                                                                        │
-│  🔧 TROUBLESHOOTING TOOL (Only if needed)                             │
-│     ./fix_app_deployment.sh dev                                       │
-│     ℹ️  Not a deployment step - only for rare issues                  │
 │                                                                        │
 └────────────────────────────────────────────────────────────────────────┘
 ```
@@ -145,6 +142,7 @@ databricks bundle run setup_star_ratings --target dev --profile DEFAULT_azure
 ./grant_permissions.sh dev
 
 # 5. Deploy and start app
+#    (Script starts the app if it's stopped, then deploys; no extra step needed.)
 ./deploy_app_source.sh dev
 
 # 6. Run validation tests (optional)
@@ -164,7 +162,7 @@ Your app will be available at: `https://your-workspace.azuredatabricks.net/apps/
 - Check that status shows **"Active"** (not "Stopped")
 - If still "Stopped", click the **"Start"** button
 
-**📖 Note:** Per [Microsoft Databricks documentation](https://learn.microsoft.com/en-us/azure/databricks/dev-tools/bundles/apps-tutorial#deploy-the-app-to-the-workspace), deploying a bundle doesn't automatically deploy the app to compute. That's why we run `deploy_app_source.sh` as a separate step to deploy the app source code from the bundle workspace location. The updated script now also ensures the app is started.
+**📖 Note:** Per [Microsoft Databricks documentation](https://learn.microsoft.com/en-us/azure/databricks/dev-tools/bundles/apps-tutorial#deploy-the-app-to-the-workspace), deploying a bundle doesn't automatically deploy the app to compute. That's why we run `deploy_app_source.sh` as a separate step. The script starts the app if it's stopped, then deploys from the bundle workspace location, and retries once if deploy hits "active deployment in progress."
 
 **⏱️ Wait for vector index to sync** (~10-15 minutes after deployment)
 - Go to: **Databricks UI → Catalog → Vector Search**
@@ -711,20 +709,19 @@ SELECT payer_stars_dev.star_ratings.star_explain(
 
 **Automatic Recovery (Built-in):** The deployment scripts (`deploy_with_config.sh` and `deploy_app_source.sh`) have automatic error recovery built directly into them. They handle common issues like "active deployment in progress" without any user action needed.
 
-**Manual Troubleshooting (Rarely Needed):** Only if automatic recovery fails (rare), you'll see suggestions to use the manual troubleshooting tool. This is a safety net, not a normal deployment step.
+**If deploy still fails:** Wait 1–2 minutes and retry `./deploy_app_source.sh`, or stop the app then run it again (see "Cannot deploy app" section below).
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                    ERROR HANDLING STRATEGY                       │
 └──────────────────────────────────────────────────────────────────┘
 
-MOST CASES (95%):
-  Error occurs → Script fixes automatically → Deployment succeeds ✅
+MOST CASES:
+  Error occurs → Script starts app if stopped, retries deploy → Succeeds ✅
   
-RARE CASES (5%):
-  Error occurs → Auto-fix fails → Script suggests manual tool ℹ️
-  → User runs: ./fix_app_deployment.sh dev
-  → User chooses recovery option → Fixed ✅
+IF DEPLOY STILL FAILS:
+  Wait 1–2 min, then retry: ./deploy_app_source.sh dev
+  Or: databricks apps stop payerstars-dev --profile <profile> ; sleep 15 ; ./deploy_app_source.sh dev
 ```
 
 ---
@@ -854,39 +851,16 @@ Retrying deployment...
 ✅ Success!
 ```
 
-**🔧 Manual Recovery (Only if Automatic Fails)**:
+**If the error persists after automatic retry:**
 
-If you see the error persist after automatic retry, use the interactive troubleshooter:
-
-```bash
-./fix_app_deployment.sh dev
-```
-
-This tool offers 4 options:
-1. **Stop app and redeploy** (fixes most issues) ← Choose this one
-2. Restart app
-3. Delete and recreate app (nuclear option)
-4. Check detailed status
-
-**Example:**
-```bash
-$ ./fix_app_deployment.sh dev
-
-What would you like to do?
-  1) Stop app and redeploy source code (fixes active deployment errors)
-  2) Restart app (fixes stuck states)
-  3) Delete and recreate app (nuclear option)
-  4) Just check status
-
-Enter choice (1-4): 1   ← Just type 1 and press Enter
-
-🛑 Stopping app...
-⏳ Waiting 15 seconds for app to stop...
-🚀 Redeploying app source code...
-✅ Success! App should be running now.
-```
-
-**Important:** `fix_app_deployment.sh` is **NOT** a normal deployment step. It's only used when automatic recovery fails, which is rare.
+1. Wait 1–2 minutes, then run: `./deploy_app_source.sh dev`
+2. Or stop the app, wait, then redeploy:
+   ```bash
+   databricks apps stop payerstars-dev --profile DEFAULT_azure
+   sleep 15
+   ./deploy_app_source.sh dev
+   ```
+3. Check status: `databricks apps get payerstars-dev --profile DEFAULT_azure`
 
 ### **Problem: "Permission denied" errors**
 
@@ -927,6 +901,37 @@ If not listed, redeploy:
 ```bash
 databricks bundle deploy --target dev --profile DEFAULT_azure
 ```
+
+### **Problem: "App creation failed unexpectedly" during bundle deploy**
+
+**What happened:** Step 2 (bundle deploy) fails with a Terraform error like:
+```text
+error waiting for app to be active or stopped
+failed to reach ACTIVE or STOPPED, got ERROR: App creation failed unexpectedly.
+Please remediate by deleting the app.
+```
+
+The bundle creates the app in Databricks, but the app ends up in **ERROR** state instead of ACTIVE or STOPPED. This is a Databricks-side glitch (often transient after a destroy or when the app name was recently deleted). The script has no way to fix it automatically yet.
+
+**Recovery (one-time):**
+
+1. Delete the failed app (use your target and profile, e.g. `staging` and `FEVM_aws`):
+   ```bash
+   databricks apps delete payerstars-<env> --profile <profile>
+   ```
+2. Remove the app from the bundle’s Terraform state so the next deploy can create it again:
+   ```bash
+   cd .databricks/bundle/<env>/terraform
+   terraform state rm databricks_app.payer_stars_app
+   cd ../../..
+   ```
+   Example for staging: `cd .databricks/bundle/staging/terraform` then `terraform state rm databricks_app.payer_stars_app`
+3. Wait 30–60 seconds for the app to finish deleting, then re-run the full deploy:
+   ```bash
+   ./deploy_with_config.sh <env>
+   ```
+
+After that, the script should complete normally (bundle deploy creates the app again and it reaches ACTIVE or STOPPED).
 
 ### **Problem: Setup notebooks failed**
 
@@ -983,6 +988,36 @@ This deletes:
 - All volumes
 - All UC functions
 - Setup job (optional)
+
+### **Destroy bundle and clean install**
+
+Use this when you want to remove everything the **bundle** deployed (app, job, workspace files) and run a full deploy again from scratch. The **catalog** (e.g. `humana_payer` or `payer_stars_dev`) is **not** removed by bundle destroy; create it in the UI if needed, or leave it and the setup job will use it.
+
+**Steps:**
+
+1. **Destroy bundle resources** for the target (removes app, setup job, and bundle workspace path):
+   ```bash
+   databricks bundle destroy --target <env> --profile <profile> --auto-approve
+   ```
+   Examples:
+   ```bash
+   databricks bundle destroy --target dev --profile DEFAULT_azure --auto-approve
+   databricks bundle destroy --target staging --profile FEVM_aws --auto-approve
+   ```
+
+2. **Optional: clean local bundle state** so the next deploy is from a clean slate:
+   ```bash
+   rm -rf .databricks/bundle/<env>
+   ```
+   e.g. `rm -rf .databricks/bundle/staging` for staging.
+
+3. **Redeploy from scratch:**
+   ```bash
+   ./deploy_with_config.sh <env>
+   ```
+   This runs: generate app.yaml → bundle deploy → setup job → grant permissions → deploy app.
+
+**Summary:** Destroy removes only bundle-managed resources (app + job + workspace path). Catalog and data stay unless you run the cleanup notebook or drop the catalog manually. After destroy, a single `./deploy_with_config.sh <env>` gives you a clean installation.
 
 ### **Full End-to-End Test**
 
@@ -1065,7 +1100,6 @@ payer_stars/
 ├── databricks.yml               # Databricks Asset Bundle config
 ├── deploy_with_config.sh        # ⭐ One-command deployment script
 ├── deploy_app_source.sh         # App deployment script
-├── fix_app_deployment.sh        # 🔧 Troubleshooter for app issues
 ├── grant_permissions.sh         # Permission management script
 ├── requirements.txt             # Python dependencies
 │

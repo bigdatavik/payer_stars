@@ -112,7 +112,7 @@ echo -e "      ${GREEN}✅ USE_SCHEMA, SELECT granted on ${CATALOG}.${SCHEMA}${N
 
 # 3. Warehouse permissions
 echo "  3️⃣  Granting WAREHOUSE permissions..."
-databricks permissions update sql/warehouses/${WAREHOUSE_ID} \
+databricks permissions update warehouses ${WAREHOUSE_ID} \
   --json "{\"access_control_list\": [{\"service_principal_name\": \"$SP_ID\", \"permission_level\": \"CAN_USE\"}]}" \
   --profile ${PROFILE} 2>&1 | grep -v "Warning" || true
 

@@ -27,6 +27,11 @@ print(f"Environment: {_current} (change the dropdown if needed, then re-run the 
 
 # COMMAND ----------
 
+# MAGIC %pip install pyyaml --quiet
+dbutils.library.restartPython()
+
+# COMMAND ----------
+
 import sys
 import os
 sys.path.append(os.path.abspath('..'))

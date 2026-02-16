@@ -13,6 +13,7 @@ variables:
 targets:
   dev:
     mode: development
+    default: true
     variables:
       environment: dev
     workspace:
@@ -34,14 +35,13 @@ targets:
     workspace:
       host: https://fevm-serverless-mwelio-humana.cloud.databricks.com
       profile: FEVM_aws
-      root_path: /Workspace/Users/vik.malhotra@databricks.com/.bundle/payer_star_ratings/prod
 
 resources:
   jobs:
     setup_star_ratings:
       name: payer_stars_setup_${var.environment}
 
-      # Serverless compute (no job_clusters) for workspaces that only support serverless
+      # Serverless compute (no job_clusters)
       parameters:
         - name: environment
           default: ${var.environment}

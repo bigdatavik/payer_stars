@@ -7,13 +7,13 @@ command: ['streamlit', 'run', 'app.py']
 env:
   # Core Databricks connection
   - name: 'DATABRICKS_HOST'
-    value: 'adb-7405607054632896.16.azuredatabricks.net'
+    value: 'fevm-serverless-mwelio-humana.cloud.databricks.com'
   - name: 'DATABRICKS_WAREHOUSE_ID'
-    value: '3a28a7b874f2413c'
+    value: '6b2808a405a0375a'
   
   # Unity Catalog configuration
   - name: 'CATALOG_NAME'
-    value: 'payer_stars_staging'
+    value: 'humana_payer'
   - name: 'SCHEMA_NAME'
     value: 'star_ratings'
   
