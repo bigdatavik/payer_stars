@@ -1355,4 +1355,14 @@ This is a production-ready CMS star ratings system demonstrating:
 
 ---
 
+## 🌿 Branches
+
+- **Feature branch name is lowercase:** `fevm` (not FEVM). Always push with:
+  ```bash
+  git push origin fevm
+  ```
+  Using `git push origin HEAD` or a different casing can create a duplicate remote branch (e.g. FEVM). Use the explicit `fevm` target to avoid this.
+
+---
+
 **Built with ❤️ for healthcare quality improvement | January 2026**
