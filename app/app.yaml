@@ -31,9 +31,9 @@ env:
   
   # Setup Resources URLs (for Setup Resources page)
   - name: 'NOTEBOOKS_FOLDER_URL'
-    value: ''
+    value: 'https://fevm-serverless-mwelio-humana.cloud.databricks.com/browse/folders/2206858257421473?o=7474651608287314'
   - name: 'SETUP_JOB_URL'
-    value: ''
+    value: 'https://fevm-serverless-mwelio-humana.cloud.databricks.com/jobs/45759612976336?o=7474651608287314'
   
   # Environment identifier
   - name: 'ENVIRONMENT'

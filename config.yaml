@@ -38,9 +38,9 @@ environments:
     app_name: "payerstars-staging" # Hyphens, not underscores!
     genie_space_id: "" # REQUIRED: Get this from setup/14_create_genie_space.py output
 
-    # Setup Resources URLs (update these for staging environment)
-    notebooks_folder_url: "" # TODO: Update after staging deployment
-    setup_job_url: "" # TODO: Update after staging deployment
+    # Setup Resources URLs (for Setup Resources page)
+    notebooks_folder_url: "https://fevm-serverless-mwelio-humana.cloud.databricks.com/browse/folders/2206858257421473?o=7474651608287314"
+    setup_job_url: "https://fevm-serverless-mwelio-humana.cloud.databricks.com/jobs/45759612976336?o=7474651608287314"
 
   prod:
     workspace_host: "https://fevm-serverless-mwelio-humana.cloud.databricks.com"
@@ -53,9 +53,9 @@ environments:
     app_name: "payerstars-prod" # Hyphens, not underscores!
     genie_space_id: "" # REQUIRED: Get this from setup/14_create_genie_space.py output
 
-    # Setup Resources URLs (update these for prod environment)
-    notebooks_folder_url: "" # TODO: Update after prod deployment
-    setup_job_url: "" # TODO: Update after prod deployment
+    # Setup Resources URLs (for Setup Resources page)
+    notebooks_folder_url: "https://fevm-serverless-mwelio-humana.cloud.databricks.com/browse/folders/2206858257421473?o=7474651608287314"
+    setup_job_url: "https://fevm-serverless-mwelio-humana.cloud.databricks.com/jobs/45759612976336?o=7474651608287314"
 
 # Common configuration (shared across all environments)
 common:
